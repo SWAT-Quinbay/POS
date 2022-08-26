@@ -28,3 +28,13 @@
 
     	- Consumer:
     		- DB Service
+
+### Product Object
+
+	{
+		name: "Licensed Fresh Mouse",
+		image: "http://loremflickr.com/640/480/food",
+		price: "759.00",
+		id: 3,
+	}
+
