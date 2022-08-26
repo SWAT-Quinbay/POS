@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
-import './index.css'
+// import './index.css'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 import store from  "@/store/index";
 import router from "@/router/index"
