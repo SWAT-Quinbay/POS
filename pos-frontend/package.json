@@ -24,10 +24,7 @@
     "autoprefixer": "^10.4.8",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",
-<<<<<<< HEAD
-=======
     "postcss": "^8.4.16",
->>>>>>> 6e727db789929ff10d8cee79fcdf6d818ff1737f
     "tailwindcss": "^3.1.8",
     "vue-template-compiler": "^2.6.14"
   },
