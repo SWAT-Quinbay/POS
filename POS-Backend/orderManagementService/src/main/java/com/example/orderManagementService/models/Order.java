@@ -8,13 +8,19 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "order")
+@Table(name = "orders")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private List<OrderedProduct> products;
+
     @CreationTimestamp
-    private Date createdDate;
+    @Column(name = "created_time")
+    private Date createdTime;
     private String status;
+    @Column(name = "net_total")
+    private int netTotal;
+
+    @OneToMany(mappedBy = "orderedProduct", cascade = CascadeType.ALL)
+    List<OrderedProduct> products;
 }

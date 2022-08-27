@@ -10,6 +10,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,12 +50,14 @@ public class InventoryServiceImp implements InventoryService {
 
     @Override
     public List<Product> searchByName(String query) {
+
         return inventoryRepository.findByNameContainingIgnoreCase(query);
     }
 
     @Override
-    public List<Product> getAll() {
-        return inventoryRepository.findAll();
+    public Page<Product> getAll(int page, int size) {
+        PageRequest pr = PageRequest.of(page,size);
+        return inventoryRepository.findAll(pr);
     }
 
     @Override
@@ -62,18 +66,18 @@ public class InventoryServiceImp implements InventoryService {
     }
 
     @Override
-    public List<Product> postProduct(List<Product> employees) {
+    public Iterable<Product> postProduct(List<Product> employees) {
         return inventoryRepository.saveAll(employees);
     }
 
     @Override
-    public List<Product> incrementQuantityViaKafka(String message)
+    public Iterable<Product> incrementQuantityViaKafka(String message)
             throws JsonProcessingException, ProductNotFoundException, NotEnoughQuanityException {
 
         TypeReference<List<Product>> ref = new TypeReference<List<Product>>() {
         };
 
-        List<Product> orderedProducts = postProduct(objectMapper.readValue(message, ref));
+        Iterable<Product> orderedProducts = postProduct(objectMapper.readValue(message, ref));
         incrementQuantity(orderedProducts);
         return orderedProducts;
     }
@@ -85,7 +89,7 @@ public class InventoryServiceImp implements InventoryService {
     }
 
     @Override
-    public boolean incrementQuantity(List<Product> products) throws ProductNotFoundException, NotEnoughQuanityException {
+    public boolean incrementQuantity(Iterable<Product> products) throws ProductNotFoundException, NotEnoughQuanityException {
         for(Product product:products){
             updateQuantity(product, true);
         }

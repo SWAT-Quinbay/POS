@@ -63,15 +63,16 @@ public class OrderServiceImp implements OrderService {
     @Override
     public Order putEmployee(Order order) throws PostgresException {
 
-        Order modifiedOrder = getById(order.getId());
+//        Order modifiedOrder = getById(order.getId());
+//
+//        modifiedOrder.setId(order.getId());
+//        modifiedOrder.setName(order.getName());
+//        modifiedOrder.setDesignation(order.getDesignation());
+//        modifiedOrder.setSalary(order.getSalary());
+//        modifiedOrder.setExperience(order.getExperience());
 
-        modifiedOrder.setId(order.getId());
-        modifiedOrder.setName(order.getName());
-        modifiedOrder.setDesignation(order.getDesignation());
-        modifiedOrder.setSalary(order.getSalary());
-        modifiedOrder.setExperience(order.getExperience());
-
-        return orderRepository.save(modifiedOrder);
+//        return orderRepository.save(modifiedOrder);
+        return null;
     }
 
     @Override

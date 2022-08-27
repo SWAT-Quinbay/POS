@@ -1,8 +1,8 @@
 package com.example.inventoryManagementService;
 
-import com.example.inventoryManagementService.customExceptions.ProductNotFoundException;
 import com.example.inventoryManagementService.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -35,9 +35,9 @@ public class InventoryController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
-    
+
     @GetMapping("/search")
-    public List<Product> searchProductByName(@RequestParam String name) {
+    public List<Product> searchProductByName(@RequestParam String name,@RequestParam int page,@RequestParam int size) {
         try {
             return inventoryService.searchByName(name);
         } catch (Exception e) {
@@ -46,9 +46,9 @@ public class InventoryController {
     }
 
     @GetMapping("/all")
-    public List<Product> getAll() {
+    public Page<Product> getAll(@RequestParam int page, @RequestParam int size) {
         try {
-            return inventoryService.getAll();
+            return inventoryService.getAll(page,size);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
@@ -66,7 +66,7 @@ public class InventoryController {
 
 
     @PostMapping("/bunch")
-    public List<Product> postAllProduct(@RequestBody List<Product> employees) {
+    public Iterable<Product> postAllProduct(@RequestBody List<Product> employees) {
         try {
             return inventoryService.postProduct(employees);
         } catch (Exception e) {

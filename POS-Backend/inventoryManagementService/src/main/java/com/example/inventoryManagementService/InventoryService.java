@@ -6,6 +6,7 @@ import com.example.inventoryManagementService.customExceptions.PostgresException
 import com.example.inventoryManagementService.customExceptions.ProductNotFoundException;
 import com.example.inventoryManagementService.models.Product;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -17,17 +18,17 @@ public interface InventoryService {
 
     List<Product> searchByName(String query);
 
-    List<Product> getAll();
+    Page<Product> getAll(int page,int size);
 
     Product postProduct(Product product);
 
-    List<Product> postProduct(List<Product> product);
+    Iterable<Product> postProduct(List<Product> product);
 
-    List<Product> incrementQuantityViaKafka(String data)
+    Iterable<Product> incrementQuantityViaKafka(String data)
             throws JsonProcessingException, ProductNotFoundException, NotEnoughQuanityException;
 
     boolean incrementQuantity(Product product) throws ProductNotFoundException, NotEnoughQuanityException;
-    boolean incrementQuantity(List<Product> product) throws ProductNotFoundException, NotEnoughQuanityException;
+    boolean incrementQuantity(Iterable<Product> product) throws ProductNotFoundException, NotEnoughQuanityException;
 
     boolean reduceQuantity(Product product) throws ProductNotFoundException, NotEnoughQuanityException;
     boolean reduceQuantity(List<Product> product) throws ProductNotFoundException, NotEnoughQuanityException;

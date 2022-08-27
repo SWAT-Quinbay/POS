@@ -16,26 +16,12 @@ public class OrderController {
     @Autowired
     OrderService orderService;
 
-    @GetMapping("/sayname")
-    public String greetings(){
-        return "Hello World";
-    }
-
     @GetMapping("/id/{id}")
     public Order getEmployeeById(@PathVariable("id") int id){
         try {
             return orderService.getById(id);
         }catch (Exception e){
             throw  new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
-        }
-    }
-
-    @GetMapping("/name/{name}")
-    public List<Order> getEmployeeByName(@PathVariable("name") String name){
-        try{
-            return orderService.getByName(name);
-        }catch (Exception e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
         }
     }
 
