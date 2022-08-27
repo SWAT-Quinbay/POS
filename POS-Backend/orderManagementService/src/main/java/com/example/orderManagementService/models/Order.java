@@ -1,26 +1,43 @@
 package com.example.orderManagementService.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.Data;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.List;
+import java.io.Serializable;
+import java.util.*;
+
 
 @Entity
-@Table(name = "orders")
-public class Order {
+@Data
+@ToString
+@Table(name = "order_t")
+public class Order implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @CreationTimestamp
-    @Column(name = "created_time")
-    private Date createdTime;
+    @Column
+    private float tax;
+    @Column
+    private float subTotal;
+    @Column
     private String status;
-    @Column(name = "net_total")
-    private int netTotal;
+    @Column
+    private String paymentMethod;
 
-    @OneToMany(mappedBy = "orderedProduct", cascade = CascadeType.ALL)
-    List<OrderedProduct> products;
+    @CreationTimestamp
+    @Column
+    private Date createdTime;
+
+//    @JsonIgnore
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderItem> orderItems;
+
+
 }
