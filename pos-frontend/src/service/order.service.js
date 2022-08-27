@@ -1,5 +1,5 @@
 import axios from "axios";
-import baseUrl from "@/utils/urls"
+import { baseUrl } from "@/utils/urls"
 
 export const createNewOrder = ({ orderData , success ,  error}) => {
   axios
