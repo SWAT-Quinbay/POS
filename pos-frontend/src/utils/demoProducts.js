@@ -136,3 +136,4 @@ export const demoProducts = [
     description: "Elegant Granite Hat",
   },
 ];
+export default products;
