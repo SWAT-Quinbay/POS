@@ -1,13 +1,13 @@
-import { getProductByName } from "@/service/product.service"
+import { getProductByName , getInventory } from "@/service/product.service"
 
 export default {
     state : {
-        productist : [],
+        productList : [],
         searchedList : []
     },
     getters : {
         getProductList(state){
-            return state.productist;
+            return state.productList;
         },
         getSearchList(state){
             return state.searchedList;
@@ -15,16 +15,23 @@ export default {
     },
     mutations : {
         updateProductList(state,value){
-            state.productist = value;
+            state.productList = value;
         },
         updateSearchList(state,value){
             state.searchedList = value;
         }
     },
     actions :{
-        // GET_PRODUCT_LIST(context){
-
-        // }
+        GET_PRODUCT_LIST({commit}){
+            getInventory({
+                successCallback : ({data}) => {
+                    commit("updateProductList",data.content)
+                },
+                errrorCallback : (errorResponse) => {
+                    console.log(errorResponse)
+                }
+            })
+        },
         SEARCH_THE_PRODUCT({commit}, value = ""){
             getProductByName({
                 searchKey : value,

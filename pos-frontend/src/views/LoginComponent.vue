@@ -19,7 +19,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .login{
     margin-left: 200px;
     margin-top: 20vh;

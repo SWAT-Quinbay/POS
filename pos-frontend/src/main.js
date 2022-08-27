@@ -1,7 +1,10 @@
 import Vue from 'vue'
 import App from './App.vue'
 // import './index.css'
+import { BootstrapVue } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
+
+Vue.use(BootstrapVue)
 
 import store from  "@/store/index";
 import router from "@/router/index"

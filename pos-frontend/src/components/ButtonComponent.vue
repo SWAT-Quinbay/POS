@@ -52,4 +52,32 @@ export default {
         background-color: #ffffff;
     }
 
+    .btn--danger{
+        color: white;
+        border: 1px solid #ffffff;
+        border: none;
+        outline: none;
+        /* width: 100%; */
+        height: 30px;
+        font-size: 13px;
+        font-weight: 700;
+        border-radius: 10px;
+        padding: 5px 15px;
+        background-color: #DC3545;
+    }
+
+    .btn--secondary{
+        color: white;
+        border: 1px solid #ffffff;
+        border: none;
+        outline: none;
+        /* width: 100%; */
+        height: 30px;
+        font-size: 13px;
+        font-weight: 700;
+        border-radius: 10px;
+        padding: 5px 15px;
+        background-color: #6D757D;
+    }
+
 </style>
