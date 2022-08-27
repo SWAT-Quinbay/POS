@@ -37,7 +37,6 @@ export default {
         font-weight: 700;
         border-radius: 10px;
         padding: 5px 15px;
-        margin-top: 20px;
         background-color: #FF6665;
     }
 
@@ -50,7 +49,6 @@ export default {
         font-weight: 700;
         border-radius: 10px;
         padding: 5px 15px;
-        margin-top: 20px;
         background-color: #ffffff;
     }
 

@@ -20,7 +20,7 @@ export default {
             const constructedProduct = {
               count: 0,
               id: product.id,
-              image: product.image,
+              imageurl: product.imageurl,
               description : product.description,
               name: product.name,
               price : product.price
@@ -55,6 +55,6 @@ export default {
         },
         DECREASE_PRODUCT_QUANTITY({ commit },productId){
             commit('decreaseProductQuantity', productId)
-        }
+        },
     }
 }

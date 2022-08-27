@@ -14,15 +14,17 @@
     </div>
     <hr class="billig--hr" />
     <div class="product--listing">
-        <div v-if="cartProducts.length > 0">
+      <div v-if="cartProducts.length > 0">
         <CartProductItem
-            v-for="(data, index) in cartProducts"
-            :productIndex="index"
-            :key="index"
-            :product="data"
+          v-for="(data, index) in cartProducts"
+          :productIndex="index"
+          :key="index"
+          :product="data"
         />
-        </div>
-      <div v-else class="d-flex justify-content-center my-4"><p><small>No products in cart!</small></p></div>
+      </div>
+      <div v-else class="d-flex justify-content-center my-4">
+        <p><small>No products in cart!</small></p>
+      </div>
     </div>
     <hr class="billig--hr" />
     <div class="billing--total--card">
@@ -61,17 +63,24 @@
           {{ data }}
         </option>
       </select>
-      <ButtonComponent
-        label="Place Order"
-        @onClick="addToCart(product)"
-        type="button"
-      />
+      <div class="mt-4">
+        <ButtonComponent
+          label="Place Order"
+          @onClick="generateBilling()"
+          type="button"
+          data-bs-toggle="modal"
+          data-bs-target="#billingModal"
+        />
+      </div>
     </div>
+
+    <BillingModal modalAccessIdName="billingModal" v-show="showBillingModal" />
   </div>
 </template>
 <script>
 import CartProductItem from "@/components/CartProductItem.vue";
 import ButtonComponent from "@/components/ButtonComponent.vue";
+import BillingModal from "@/components/BillingModal.vue";
 import { mapGetters } from "vuex";
 
 export default {
@@ -79,11 +88,15 @@ export default {
   data() {
     return {
       paymentMethod: null,
+      placeOrderLoader: false,
+      orderDataToModal: {},
+      showBillingModal : false
     };
   },
   components: {
     CartProductItem,
     ButtonComponent,
+    BillingModal,
   },
   computed: {
     ...mapGetters({
@@ -96,6 +109,38 @@ export default {
     },
     calculateTax() {
       return Math.floor((this.totalPrice / 100) * this.tax);
+    },
+  },
+  methods: {
+    generateBilling() {
+      const orderData = {
+        products: this.cartProducts,
+        subTotal: this.totalPrice,
+        netTotal: this.totalPrice + this.tax,
+        tax: this.tax,
+        paymentMethod: this.paymentMethod,
+        status : "created"
+      };
+
+      this.showBillingModal = true
+
+      this.orderDataToModal = orderData;
+
+      // createNewOrder({
+      //   orderData,
+      //   successCallback: (res) => {
+      //     console.log(res)
+      //     if(res.status === 200){
+
+      //     }else{
+
+      //     }
+      //     // commit("updateSearchList", data);
+      //   },
+      //   errrorCallback: (errorResponse) => {
+      //     console.log(errorResponse);
+      //   },
+      // });
     },
   },
 };
@@ -136,7 +181,7 @@ export default {
   max-height: 300px;
   overflow: auto;
   border-radius: 10px;
-  border: .5px solid #dbdbdb;
+  border: 0.5px solid #dbdbdb;
   padding: 5px;
 }
 .cart--clear {
@@ -170,7 +215,7 @@ export default {
 .billing--total--value {
   font-size: 16px;
   font-weight: bolder;
-  color: #33BC06;
+  color: #33bc06;
 }
 
 .billing--dot {
@@ -198,7 +243,7 @@ export default {
 }
 
 #payment-method:focus {
-  border-color: #FF6665;
-  outline-color: #FF6665;
+  border-color: #ff6665;
+  outline-color: #ff6665;
 }
 </style>

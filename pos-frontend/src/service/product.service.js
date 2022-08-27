@@ -1,5 +1,5 @@
 import axios from "axios";
-import baseUrl from "@/utils/urls"
+import { baseUrl } from "@/utils/urls"
 
 export const addNewProduct = ({ productData , success ,  error}) => {
   axios
@@ -31,6 +31,17 @@ export const updateProductDetail = ({ productId , productData , success ,  error
       })
       .catch((e) => {
         error && error(e);
+      });
+  }
+
+  export const getProductByName = ({ searchKey, successCallback, errorCallback }) => {
+    axios
+      .get(`${baseUrl}/search?name=${searchKey}&page=0&size=20`)
+      .then((response) => {
+        successCallback && successCallback(response);
+      })
+      .catch((e) => {
+        errorCallback && errorCallback(e);
       });
   }
 

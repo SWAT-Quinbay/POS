@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="product--card">
-            <img :src="product.image" class="product--image" alt="product">
+            <img :src="product.imageurl" class="product--image" alt="product">
                 <div class="row text-center mt-4">
                     <div class="col-12">
                         <p class="product--name">{{ product.name }}</p>
@@ -16,12 +16,14 @@
                         <img :src="product.image" class="product--image" alt="product">
                     </div>
                 </div> -->
-                <ButtonComponent
+               <div class="mt-3">
+                 <ButtonComponent
                 label="Add to Bag"
                 buttonStyle="btn--primary--outline"
                 @onClick="addToCart(product)"
                 type="button"
             />
+               </div>
         </div>
     </div>
 </template>
