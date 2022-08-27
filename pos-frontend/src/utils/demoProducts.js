@@ -1,3 +1,4 @@
+
 const products = [
   {
     name: "Generic Metal Towels",
@@ -102,3 +103,4 @@ const products = [
     id: 17,
   },
 ];
+export default products;
