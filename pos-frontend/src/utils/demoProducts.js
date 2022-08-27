@@ -1,4 +1,4 @@
-const products = [
+export const demoProducts = [
   {
     name: "Generic Metal Towels",
     image: "http://loremflickr.com/640/480/food",
