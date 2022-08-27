@@ -1,5 +1,12 @@
 <template>
   <div>
+    <div class="search--card">
+      <div class="row">
+        <div class="col">
+          
+        </div>
+    </div>
+    </div>
     <div class="row">
       <ProductCard
         class="col-12 col-md-6 col-lg-4 col-xl-3"

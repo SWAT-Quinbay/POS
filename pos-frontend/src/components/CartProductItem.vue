@@ -7,7 +7,7 @@
       </div>
       <div class="d-flex flex-column">
         <div><p class="cart--item--name">{{ subStringProduct(product.name) }}</p></div>
-        <div><p class="cart--item--price">$ {{ product.price * product.count }}</p></div>
+        <div><p class="cart--item--price">₹ {{ product.price * product.count }}</p></div>
       </div>
 
       </div>
@@ -102,7 +102,7 @@ export default {
 }
 
 .product--count--btn{
-  background-color: #1C3584;
+  background-color: #FFBB2E;
   color: #F2F7FB;
   border: none;
   outline: none;

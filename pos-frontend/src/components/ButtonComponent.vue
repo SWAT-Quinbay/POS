@@ -38,12 +38,12 @@ export default {
         border-radius: 10px;
         padding: 5px 15px;
         margin-top: 20px;
-        background-color: #1C3584;
+        background-color: #FF6665;
     }
 
     .btn--primary--outline{
-        color: #1C3584;
-        border: 1px solid #1C3584;
+        color: #FF6665;
+        border: 1px solid #FF6665;
         width: 100%;
         height: 35px;
         font-size: 14px;

@@ -29,7 +29,7 @@
       <div class="d-flex justify-content-between">
         <div><p class="billing--header">Sub Total</p></div>
         <div>
-          <p class="billing--subheader">$ {{ totalPrice }}</p>
+          <p class="billing--subheader">₹ {{ totalPrice }}</p>
         </div>
       </div>
       <div class="d-flex justify-content-between">
@@ -37,14 +37,14 @@
           <p class="billing--header">Tax {{ tax }}% (VAT Included)</p>
         </div>
         <div>
-          <p class="billing--subheader">$ {{ calculateTax }}</p>
+          <p class="billing--subheader">₹ {{ calculateTax }}</p>
         </div>
       </div>
       <hr class="billing--dot" />
       <div class="d-flex justify-content-between">
         <div><p class="billing--total--text">Total</p></div>
         <div>
-          <p class="billing--total--value">$ {{ getNetPrice }}</p>
+          <p class="billing--total--value">₹ {{ getNetPrice }}</p>
         </div>
       </div>
     </div>
@@ -170,7 +170,7 @@ export default {
 .billing--total--value {
   font-size: 16px;
   font-weight: bolder;
-  color: #1C3584;
+  color: #33BC06;
 }
 
 .billing--dot {
@@ -198,7 +198,7 @@ export default {
 }
 
 #payment-method:focus {
-  border-color: #1C3584;
-  outline-color: #1C3584;
+  border-color: #FF6665;
+  outline-color: #FF6665;
 }
 </style>

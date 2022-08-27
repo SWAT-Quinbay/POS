@@ -5,7 +5,7 @@
                 <div class="row text-center mt-4">
                     <div class="col-12">
                         <p class="product--name">{{ product.name }}</p>
-                        <p class="product--price">$ {{ product.price }}</p>
+                        <p class="product--price">₹ {{ product.price }}</p>
                     </div>
                 </div>
                 <!-- <div class="d-flex justify-content-between align-items-end">
@@ -18,7 +18,7 @@
                 </div> -->
                 <ButtonComponent
                 label="Add to Bag"
-                buttonStyle="btn--primary"
+                buttonStyle="btn--primary--outline"
                 @onClick="addToCart(product)"
                 type="button"
             />
