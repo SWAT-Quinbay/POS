@@ -91,6 +91,10 @@ public class OrderServiceImp implements OrderService {
             throw new PostgresException("Not enough Stocks in inventory");
         }
 
+        //calculate Total
+        calculateTotal(order,inventoryProducts);
+
+
         order = orderRepository.save(order);
         List<OrderItem> items = OrderJsonParser.extractItems(jsonOrder,order);
         orderItemRepository.saveAll(items);
@@ -99,6 +103,14 @@ public class OrderServiceImp implements OrderService {
         restTemplate.postForObject(INVENTORY_URL + "/reduce/all", inventoryProducts,Boolean.class);
 
         return order;
+    }
+
+    private void calculateTotal(Order order, List<InventoryProduct> inventoryProducts){
+        float total = 0;
+        for(InventoryProduct inventoryProduct: inventoryProducts){
+            total += (inventoryProduct.getPrice() * inventoryProduct.getQuantity());
+        }
+        order.setSubTotal(total);
     }
 
     private boolean checkStockInInventory(List<InventoryProduct> inventoryProducts){
