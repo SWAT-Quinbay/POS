@@ -11,7 +11,8 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api")
+@CrossOrigin(origins = "*")
+@RequestMapping("/inventory")
 public class InventoryController {
 
     @Autowired
@@ -54,7 +55,7 @@ public class InventoryController {
         }
     }
 
-    @PostMapping("/")
+    @PostMapping("/add")
     public Product postProduct(@RequestBody Product employee) {
 
         try {
@@ -65,11 +66,29 @@ public class InventoryController {
     }
 
 
-    @PostMapping("/bunch")
+    @PostMapping("/add/all")
     public Iterable<Product> postAllProduct(@RequestBody List<Product> employees) {
         try {
             return inventoryService.postProduct(employees);
         } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    @PostMapping("/stock/")
+    public boolean checkProductStock(@RequestBody Product product){
+        try {
+            return inventoryService.checkStocks(product);
+        }catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    @PostMapping("/stock/all")
+    public boolean checkProductStocks(@RequestBody List<Product> products){
+        try {
+            return inventoryService.checkStocks(products);
+        }catch (Exception e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }

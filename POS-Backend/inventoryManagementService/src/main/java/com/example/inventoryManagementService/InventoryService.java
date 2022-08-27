@@ -24,8 +24,10 @@ public interface InventoryService {
 
     Iterable<Product> postProduct(List<Product> product);
 
-    Iterable<Product> incrementQuantityViaKafka(String data)
-            throws JsonProcessingException, ProductNotFoundException, NotEnoughQuanityException;
+    Iterable<Product> incrementQuantityViaKafka(String data) throws JsonProcessingException;
+
+    boolean checkStocks(Product product) throws ProductNotFoundException, NotEnoughQuanityException;
+    boolean checkStocks(List<Product> product) throws ProductNotFoundException, NotEnoughQuanityException;
 
     boolean incrementQuantity(Product product) throws ProductNotFoundException, NotEnoughQuanityException;
     boolean incrementQuantity(Iterable<Product> product) throws ProductNotFoundException, NotEnoughQuanityException;
