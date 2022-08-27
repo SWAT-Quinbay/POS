@@ -1,5 +1,5 @@
 import axios from "axios";
-import { baseUrl } from "@/utils/urls"
+import { baseUrl , orderBaseUrl } from "@/utils/urls"
 
 export const createNewOrder = ({ orderData , success ,  error}) => {
   axios
@@ -23,14 +23,14 @@ export const deleteOrderHistory = ({ orderId , success ,  error}) => {
       });
   }
 
-export const getOrderHistory = ({ success, error }) => {
+export const getOrderHistory = ({ successCallback, errrorCallback }) => {
   axios
-    .get(`${baseUrl}`)
+    .get(`${orderBaseUrl}/all`)
     .then((response) => {
-      success && success(response);
+      successCallback && successCallback(response);
     })
     .catch((e) => {
-      error && error(e);
+      errrorCallback && errrorCallback(e);
     });
 }
 

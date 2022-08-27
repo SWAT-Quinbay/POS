@@ -2,8 +2,8 @@
     <nav class="navbar navbar-expand-lg bg-light">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">
-      <img src="" alt="" width="30" height="24" class="d-inline-block align-text-top">
-      Bootstrap
+      <img src="@/assets/swat.png" alt="" width="80" class="d-inline-block align-text-top">
+      FoodCourt
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>

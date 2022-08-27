@@ -45,14 +45,14 @@ export const updateProductDetail = ({ productId , productData , success ,  error
       });
   }
 
-export const getInventory = ({ success, error }) => {
+export const getInventory = ({ successCallback, errrorCallback }) => {
   axios
-    .get(`${baseUrl}`)
+    .get(`${baseUrl}/all?page=0&size=100`)
     .then((response) => {
-      success && success(response);
+      successCallback && successCallback(response);
     })
     .catch((e) => {
-      error && error(e);
+      errrorCallback && errrorCallback(e);
     });
 }
 

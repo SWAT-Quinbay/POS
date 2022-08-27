@@ -3,7 +3,7 @@
     <div class="search--card">
       <div class="row align-items-center">
         <div class="col-12 col-md-8 my-2">
-          <input type="search" class="search--bar" v-model="searchKey" placeholder="Search Product">
+          <input type="search" class="search--bar" v-model="searchKey" @blur="searchForProduct(searchKey)" placeholder="Search Product">
         </div>
         <div class="col-12 col-md-4 my-2">
           <ButtonComponent
