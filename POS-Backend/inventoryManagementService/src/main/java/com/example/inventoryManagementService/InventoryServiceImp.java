@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,18 +46,18 @@ public class InventoryServiceImp implements InventoryService {
 
     @Override
     public List<Product> getByName(String name) {
-        return inventoryRepository.findByName(name);
+        return inventoryRepository.findAllByName(name);
     }
 
     @Override
     public List<Product> searchByName(String query) {
 
-        return inventoryRepository.findByNameContainingIgnoreCase(query);
+        return inventoryRepository.findAllByNameContainingIgnoreCase(query,Sort.by(Sort.Direction.ASC,"name"));
     }
 
     @Override
     public Page<Product> getAll(int page, int size) {
-        PageRequest pr = PageRequest.of(page,size);
+        PageRequest pr = PageRequest.of(page,size,Sort.by("quantity").descending());
         return inventoryRepository.findAll(pr);
     }
 
@@ -72,7 +73,7 @@ public class InventoryServiceImp implements InventoryService {
 
     @Override
     public Iterable<Product> incrementQuantityViaKafka(String message)
-            throws JsonProcessingException, ProductNotFoundException, NotEnoughQuanityException {
+            throws JsonProcessingException {
 
         TypeReference<List<Product>> ref = new TypeReference<List<Product>>() {
         };
@@ -83,36 +84,7 @@ public class InventoryServiceImp implements InventoryService {
     }
 
     @Override
-    public boolean incrementQuantity(Product product) throws ProductNotFoundException, NotEnoughQuanityException {
-        updateQuantity(product,true);
-        return true;
-    }
-
-    @Override
-    public boolean incrementQuantity(Iterable<Product> products) throws ProductNotFoundException, NotEnoughQuanityException {
-        for(Product product:products){
-            updateQuantity(product, true);
-        }
-        return true;
-    }
-
-    @Override
-    public boolean reduceQuantity(Product product) throws ProductNotFoundException, NotEnoughQuanityException {
-        updateQuantity(product,false);
-        return true;
-    }
-
-    @Override
-    public boolean reduceQuantity(List<Product> products) throws ProductNotFoundException, NotEnoughQuanityException {
-        for(Product product:products){
-            updateQuantity(product, false);
-        }
-        return true;
-    }
-
-    private void updateQuantity(Product orderedProduct, boolean isIncrement)
-            throws ProductNotFoundException, NotEnoughQuanityException {
-
+    public boolean checkStocks(Product orderedProduct) throws ProductNotFoundException, NotEnoughQuanityException {
         Optional<Product> result = inventoryRepository.findById(orderedProduct.getId());
 
         if (!result.isPresent()) {
@@ -121,9 +93,57 @@ public class InventoryServiceImp implements InventoryService {
 
         Product originalProduct = result.get();
 
-        if (!isIncrement && (originalProduct.getQuantity() < orderedProduct.getQuantity())) {
+        if (originalProduct.getQuantity() < orderedProduct.getQuantity()) {
             throw new NotEnoughQuanityException("The Quantity");
         }
+
+        return true;
+    }
+
+    @Override
+    public boolean checkStocks(List<Product> products) throws ProductNotFoundException, NotEnoughQuanityException {
+        for(Product product :products){
+            checkStocks(product);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean incrementQuantity(Product product){
+        updateQuantity(product,true);
+        return true;
+    }
+
+    @Override
+    public boolean incrementQuantity(Iterable<Product> products){
+        for(Product product:products){
+            updateQuantity(product, true);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean reduceQuantity(Product product) throws ProductNotFoundException, NotEnoughQuanityException {
+        checkStocks(product);
+        updateQuantity(product,false);
+        return true;
+    }
+
+    @Override
+    public boolean reduceQuantity(List<Product> products) throws ProductNotFoundException, NotEnoughQuanityException {
+        checkStocks(products);
+
+        for(Product product:products){
+            updateQuantity(product, false);
+        }
+        return true;
+    }
+
+    private void updateQuantity(Product orderedProduct, boolean isIncrement) {
+
+        Optional<Product> result = inventoryRepository.findById(orderedProduct.getId());
+
+        Product originalProduct = result.get();
 
         int updatedQuantity;
         if(isIncrement){
