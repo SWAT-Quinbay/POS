@@ -11,7 +11,7 @@ public class JsonOrder {
     private float subTotal;
     private String status;
     private String paymentMethod;
-    private List<JsonOrderItem> orderJsonOrderItems;
+    private List<JsonItem> jsonItems;
 }
 
 
