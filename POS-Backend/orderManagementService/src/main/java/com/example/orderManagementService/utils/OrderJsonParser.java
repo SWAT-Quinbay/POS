@@ -24,21 +24,21 @@ public class OrderJsonParser {
     public static List<OrderItem> extractItems(JsonOrder jsonOrder, Order order) throws InvalidQuantityException {
         List<OrderItem> items = new ArrayList<>();
 
-        for (JsonOrderItem jsonOrderItem : jsonOrder.getOrderJsonOrderItems()){
+        for (JsonItem jsonItem : jsonOrder.getJsonItems()){
             OrderItem orderItem  = new OrderItem();
-            orderItem.setProduct_id(jsonOrderItem.getId());//product id
-            orderItem.setItemId(jsonOrderItem.getItemId());
-            orderItem.setName(jsonOrderItem.getName());
-            orderItem.setDescription(jsonOrderItem.getDescription());
-            orderItem.setPrice(jsonOrderItem.getPrice());
-            orderItem.setImageUrl(jsonOrderItem.getImageUrl());
+            orderItem.setProduct_id(jsonItem.getId());//product id
+            orderItem.setItemId(jsonItem.getItemId());
+            orderItem.setName(jsonItem.getName());
+            orderItem.setDescription(jsonItem.getDescription());
+            orderItem.setPrice(jsonItem.getPrice());
+            orderItem.setImageUrl(jsonItem.getImageUrl());
 
 
-            if(jsonOrderItem.getQuantity() <= 0){
+            if(jsonItem.getQuantity() <= 0){
                 throw new InvalidQuantityException("Quantity Should be a Positive number");
             }
 
-            orderItem.setQuantity(jsonOrderItem.getQuantity());
+            orderItem.setQuantity(jsonItem.getQuantity());
             orderItem.setOrder(order);
 
             items.add(orderItem);
@@ -49,20 +49,20 @@ public class OrderJsonParser {
     public static List<InventoryProduct> extractInventoryProduct(JsonOrder jsonOrder) throws InvalidQuantityException {
         List<InventoryProduct> inventoryProducts = new ArrayList<>();
 
-        for(JsonOrderItem jsonOrderItem : jsonOrder.getOrderJsonOrderItems()){
+        for(JsonItem jsonItem : jsonOrder.getJsonItems()){
             InventoryProduct inventoryProduct = new InventoryProduct();
 
-            inventoryProduct.setId(jsonOrderItem.getId());
-            inventoryProduct.setName(jsonOrderItem.getName());
-            inventoryProduct.setDescription(jsonOrderItem.getDescription());
-            inventoryProduct.setImageurl(jsonOrderItem.getImageUrl());
-            inventoryProduct.setPrice(jsonOrderItem.getPrice());
+            inventoryProduct.setId(jsonItem.getId());
+            inventoryProduct.setName(jsonItem.getName());
+            inventoryProduct.setDescription(jsonItem.getDescription());
+            inventoryProduct.setImageUrl(jsonItem.getImageUrl());
+            inventoryProduct.setPrice(jsonItem.getPrice());
 
-            if(jsonOrderItem.getQuantity() <= 0){
+            if(jsonItem.getQuantity() <= 0){
                 throw new InvalidQuantityException("Quantity Should be a Positive number");
             }
 
-            inventoryProduct.setQuantity(jsonOrderItem.getQuantity());
+            inventoryProduct.setQuantity(jsonItem.getQuantity());
 
             inventoryProducts.add(inventoryProduct);
         }
@@ -77,7 +77,7 @@ public class OrderJsonParser {
             inventoryProduct.setId(item.getProduct_id());
             inventoryProduct.setName(item.getName());
             inventoryProduct.setDescription(item.getDescription());
-            inventoryProduct.setImageurl(item.getImageUrl());
+            inventoryProduct.setImageUrl(item.getImageUrl());
             inventoryProduct.setPrice(item.getPrice());
             inventoryProduct.setQuantity(item.getQuantity());
 

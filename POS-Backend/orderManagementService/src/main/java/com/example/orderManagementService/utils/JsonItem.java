@@ -3,7 +3,7 @@ package com.example.orderManagementService.utils;
 import lombok.Data;
 
 @Data
-public class JsonOrderItem {
+public class JsonItem {
     private int itemId;
     private int id;
     private String name;

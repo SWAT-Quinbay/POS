@@ -94,7 +94,7 @@ public class InventoryServiceImp implements InventoryService {
         Product originalProduct = result.get();
 
         if (originalProduct.getQuantity() < orderedProduct.getQuantity()) {
-            throw new NotEnoughQuanityException("The Quantity");
+            throw new NotEnoughQuanityException("Not enough Quantity");
         }
 
         return true;

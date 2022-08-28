@@ -47,6 +47,7 @@ public class OrderController {
         try {
             return orderService.postOrder(jsonOrder);
         }catch (Exception e){
+            e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
         }
 

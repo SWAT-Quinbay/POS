@@ -9,7 +9,7 @@ import javax.persistence.*;
 @ToString
 @Entity
 @Table(name = "order_item"
-//        ,uniqueConstraints =  @UniqueConstraint(columnNames = {"order_id","id"})
+        ,uniqueConstraints =  @UniqueConstraint(columnNames = {"order_id","product_id"})
  )
 public class OrderItem {
 
@@ -36,8 +36,8 @@ public class OrderItem {
     private int quantity;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id",referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "order_id",referencedColumnName = "id",nullable = false)
     private Order order;
 
 }
