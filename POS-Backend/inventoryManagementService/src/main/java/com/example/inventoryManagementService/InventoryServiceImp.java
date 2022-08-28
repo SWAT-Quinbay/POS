@@ -168,7 +168,7 @@ public class InventoryServiceImp implements InventoryService {
         modifiedProduct.setId(product.getId());
         modifiedProduct.setName(product.getName());
         modifiedProduct.setPrice(product.getPrice());
-        modifiedProduct.setImageurl(product.getImageurl());
+        modifiedProduct.setImageUrl(product.getImageUrl());
 
         if(product.getQuantity() < 0){
             throw new InvalidDataProvidedException("Quantity Shoud be Postive number");
