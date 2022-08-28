@@ -1,25 +1,21 @@
 <template>
-  <div>
-    <div
-      class="modal fade"
-      :id="modalAccessIdName"
-      tabindex="-1"
-      :aria-labelledby="modalAccessIdName + 'label'"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Order Summary</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <!-- <svg id="msi"></svg> -->
+    <div>
+        <vue-html2pdf
+              :show-layout="false"
+              :enable-download="true"
+              :paginate-elements-by-height="3000"
+              filename="hee hee"
+              :pdf-quality="2"
+              :manual-pagination="false"
+              pdf-format="a6"
+              pdf-orientation="portrait"
+              pdf-content-width="auto"
+              @progress="onProgress($event)"
+              @hasStartedGeneration="hasStartedGeneration()"
+              @hasGenerated="hasGenerated($event)"
+              ref="html2Pdf"
+            >
+              <section slot="pdf-content">
                 <div class="inner-bg m-0 p-0">
                   <div class="inner-border py-3">
                     <div class="row m-0">
@@ -41,12 +37,12 @@
                         <div class="row justify-content-between m-0">
                           <div class="col-auto px-0">
                             <p class="m-0 small billText">
-                              Date: {{ getData }}
+                              Date: {{ orderData.date }}
                             </p>
                           </div>
                           <div class="col-auto px-0">
                             <p class="m-0 small billText">
-                              Time: {{ getTime }}
+                              Time: {{ orderData.time }}
                             </p>
                           </div>
                         </div>
@@ -67,10 +63,10 @@
                         </div>
                         <div class="mt-1 mb-2 hr-bill"></div>
 
-                        <div v-if="cartProducts.length">
+                        <div v-if="orderData.totalItems > 0">
                           <div
                             class="row justify-content-between m-0"
-                            v-for="(data, index) in cartProducts"
+                            v-for="(data, index) in orderData.cartProducts"
                             :key="index"
                           >
                             <div class="col-6 px-0">
@@ -103,18 +99,18 @@
                             <p class="m-0 small billText">SUBTOTAL</p>
                           </div>
                           <div class="col-3 px-0 text-end">
-                            <p class="m-0 small billText">₹ {{ totalPrice }}</p>
+                            <p class="m-0 small billText">₹ {{ orderData.totalPrice }}</p>
                           </div>
                         </div>
                         <div class="row justify-content-between m-0">
                           <div class="col-6 px-0">
                             <p class="m-0 small billText">
-                              Tax {{ tax }}% (VAT Included)
+                              Tax {{ orderData.tax }}% (VAT Included)
                             </p>
                           </div>
                           <div class="col-3 px-0 text-end">
                             <p class="m-0 small billText">
-                              ₹ {{ calculateTax }}
+                              ₹ {{ orderData.taxAmount }}
                             </p>
                           </div>
                         </div>
@@ -125,7 +121,7 @@
                           </div>
                           <div class="col-3 px-0 text-end">
                             <p class="m-0 small billTextTotal">
-                              ₹ {{ getNetPrice }}
+                              ₹ {{ orderData.netPrice }}
                             </p>
                           </div>
                         </div>
@@ -133,7 +129,7 @@
                         <div class="row justify-content-between m-0 mb-2">
                           <div class="col-6 px-0">
                             <p class="m-0 loyaltyPoints">
-                              TOTAL ITEMS : {{ cartProducts.length }}
+                              TOTAL ITEMS : {{ orderData.totalItems }}
                             </p>
                           </div>
                         </div>
@@ -156,158 +152,37 @@
                     </div>
                   </div>
                 </div>
-          </div>
-          <div class="modal-footer d-flex flex-row">
-            <div>
-              <ButtonComponent
-                label="Close"
-                @onClick="() => {}"
-                type="button"
-                buttonStyle="btn--primary--outline"
-                data-bs-dismiss="modal"
-              />
-            </div>
-            <div>
-              <ButtonComponent
-                label="Download Bill"
-                @onClick="downloadBill()"
-                type="button"
-              />
-            </div>
-            <div>
-              <ButtonComponent
-                label="Save and Generate Bill"
-                @onClick="createOrder()"
-                type="button"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
+              </section>
+            </vue-html2pdf>
     </div>
-    <BillTemplate ref="billPage"/>
-  </div>
 </template>
 <script>
-
-import ButtonComponent from "@/components/ButtonComponent.vue";
-import BillTemplate from "@/components/BillTemplate.vue";
-import { mapGetters } from "vuex";
-import { createNewOrder } from "@/service/order.service.js"
-
-
+import VueHtml2pdf from "vue-html2pdf";
 export default {
-  name: "BillingModal",
-  data(){
-    return{
-      billingTemplate : false,
-    }
-  },
-  props: {
-    // orderData: {
-    //   type: Object,
-    //   default: () => {},
-    // },
-    paymentMethod : {
-      type : String,
-      default : ""
+    name : "BillTemplate",
+    data(){
+        return{
+            orderData : {},
+            products : []
+        }
     },
-    modalAccessIdName: {
-      type: String,
-      default: "",
+    components : {
+        VueHtml2pdf
     },
-  },
-  components: {
-    ButtonComponent,
-    BillTemplate
-  },
-  computed: {
-    ...mapGetters({
-      cartProducts: "getCartProduct",
-      totalPrice: "getTotalPrice",
-      tax: "getTax",
-    }),
-    
-    getNetPrice() {
-      return Math.floor(this.totalPrice + (this.totalPrice / 100) * this.tax);
+    methods: {
+        generateBill(data){
+            console.log(data.cartProducts)
+            this.orderData = data;
+            // setTimeout(()=>{
+                this.$refs.html2Pdf.generatePdf();
+            // }, 1000);
+            
+        }
     },
-    calculateTax() {
-      return Math.floor((this.totalPrice / 100) * this.tax);
-    },
-    getData() {
-      const tempTime = new Date();
-      return (
-        tempTime.getDate() +
-        "-" +
-        (tempTime.getMonth() + 1) +
-        "-" +
-        tempTime.getFullYear()
-      );
-    },
-    getTime() {
-      const tempTime = new Date();
-      return (
-        (tempTime.getHours() === 0
-          ? 12
-          : tempTime.getHours() > 12
-          ? tempTime.getHours() - 12
-          : tempTime.getHours()) +
-        " : " +
-        tempTime.getMinutes() +
-        " " +
-        (tempTime.getHours() < 12 && tempTime.getHours() >= 0 ? "AM" : "PM")
-      );
-    },
-  },
-  methods: {
-    downloadBill() {
-      // alert("in billing modals")
-      const dataToBilling = {
-        cartProducts : this.cartProducts,
-        totalItems : this.cartProducts.length,
-        totalPrice   : this.totalPrice,
-        tax : this.tax,
-        netPrice : this.getNetPrice,
-        taxAmount : this.calculateTax,
-        time : this.getTime,
-        date : this.getData
-      }
-
-      console.log(dataToBilling)
-
-      this.$refs.billPage.generateBill(dataToBilling)
-
-      // this.billTemData = dataToBilling;
-      // this.billingTemplate = true;
-      // alert(this.getNetPrice)
-    },
-    createOrder (){
-
-      const dataToDB = {
-        orderJsonOrderItems : this.cartProducts,
-        paymentMethod: this.paymentMethod,
-        subTotal   : this.totalPrice,
-        status : "created",
-        tax : this.tax,
-      }
-
-      createNewOrder({
-                orderData : dataToDB ,
-                successCallback : (data) =>{
-                    console.log(data)
-                },
-                errrorCallback : (err) => {
-                    console.log(err)
-                }
-            })
-
-      // console.log(dataToDB)
-    },
-  },
-};
+}
 </script>
 <style scoped>
-.inner-bg {
+    .inner-bg {
   background-color: #ffffff;
   padding: 15px;
 }

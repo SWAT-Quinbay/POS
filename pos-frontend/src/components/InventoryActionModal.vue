@@ -1,63 +1,13 @@
 <template>
-  <div
-    class="action--modal"
-  >
-    <div class="modal--dialog modal--dialog-centered">
-      <div class="modal--content">
-        <div class="modal--header">
-          <h5 class="modal--title">{{ modalData.modalHeader }}</h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
-        </div>
-        <div class="modal--body">
-          <!-- <svg id="msi"></svg> -->
-          <div class="action--form--controller">
-            <label for="product-name" class="action--input--label">Product Name</label>
-            <input type="text" v-model="product.productName" class="action--input" placeholder="Enter Product Name">
-          </div>
-          <div class="action--form--controller">
-            <label for="product-description" class="action--input--label">Product Description</label>
-            <input type="text" v-model="product.productDescription" class="action--input" placeholder="Enter Product Name">
-          </div>
-          <div class="action--form--controller">
-            <label for="product-price" class="action--input--label">Product Price</label>
-            <input type="text" v-model="product.productPrice" class="action--input" placeholder="Enter Product Name">
-          </div>
-          <div class="action--form--controller">
-            <label for="product-quantity" class="action--input--label">Product Quantity</label>
-            <input type="number" v-model="product.productQuantity" class="action--input" placeholder="Enter Product Name">
-          </div>
-
-        </div>
-        <div class="modal--footer d-flex flex-row">
-          <div>
-            <ButtonComponent
-              label="Close"
-              @onClick="() => {}"
-              type="button"
-              buttonStyle="btn--primary--outline"
-              data-bs-dismiss="modal"
-            />
-          </div>
-          <div>
-            <ButtonComponent
-              :label="modalData.modalButtonName"
-              @onClick="() => {}"
-              type="button"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <b-modal
+      title="Modal Variants"
+    >
+      <div><h1>Hello world</h1></div>
+    </b-modal>
 </template>
 
 <script>
-import ButtonComponent from "@/components/ButtonComponent.vue";
+// import ButtonComponent from "@/components/ButtonComponent.vue";
 
 export default {
   data() {
@@ -79,10 +29,14 @@ export default {
     modalData : {
       type : Object,
       default : () => {}
+    },
+    showModal : {
+      type : Boolean,
+      default :false
     }
   },
   components: {
-    ButtonComponent,
+    // ButtonComponent,
   },
   methods: {
     showsaved() {

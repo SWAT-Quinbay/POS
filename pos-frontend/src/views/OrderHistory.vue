@@ -33,16 +33,16 @@
         <div class="orderhistory--container">
             <div class="row p-3 justify-content-center">
           <div class="col">
-            <p class="orderhistory--table--th">Product Name</p>
+            <p class="orderhistory--table--th">Order Id</p>
           </div>
           <div class="col">
-            <p class="orderhistory--table--th">Description</p>
+            <p class="orderhistory--table--th">Date</p>
           </div>
           <div class="col">
-            <p class="orderhistory--table--th">Price</p>
+            <p class="orderhistory--table--th">Status</p>
           </div>
           <div class="col">
-            <p class="orderhistory--table--th">Quantity</p>
+            <p class="orderhistory--table--th">Items</p>
           </div>
           <div class="col">
             <p class="orderhistory--table--th">Edit</p>
@@ -86,5 +86,44 @@ export default {
 }
 </script>
 <style scoped>
-    
+    .search--card {
+  background-color: #ffffff;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.orderhistory--table {
+  background-color: #ffffff;
+  /* padding: 10px; */
+  border-radius: 10px;
+}
+
+.orderhistory--container{
+}
+
+.orderhistory--single--list{
+        border: .5px solid #1b1b1b;
+        margin: 0;
+    }
+
+.search--bar {
+  background-color: #f1f1f1;
+  border: 0.7px solid #e2e2e2;
+  height: 40px;
+  border-radius: 10px;
+  padding-left: 10px;
+  width: 100%;
+}
+
+.search--bar:focus {
+  border: 1.5px solid #ff6665;
+  outline: none;
+}
+
+.orderhistory--table--th{
+    font-size: 13px;
+    font-weight: 700;
+    margin: 0;
+}
+
 </style>

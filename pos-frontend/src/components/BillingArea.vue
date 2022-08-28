@@ -74,7 +74,7 @@
       </div>
     </div>
 
-    <BillingModal modalAccessIdName="billingModal" v-show="showBillingModal" />
+    <BillingModal modalAccessIdName="billingModal" v-show="showBillingModal" :paymentMethod="paymentMethod" />
   </div>
 </template>
 <script>
@@ -114,14 +114,16 @@ export default {
   methods: {
     generateBilling() {
       const orderData = {
-        products: this.cartProducts,
+        orderItems: this.cartProducts,
         subTotal: this.totalPrice,
-        netTotal: this.totalPrice + this.tax,
+        // netTotal: this.totalPrice + this.tax,
         tax: this.tax,
         paymentMethod: this.paymentMethod,
         status : "created"
       };
 
+    console.log()
+// 
       this.showBillingModal = true
 
       this.orderDataToModal = orderData;

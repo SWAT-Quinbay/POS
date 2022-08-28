@@ -7,7 +7,7 @@
       </div>
       <div class="d-flex flex-column">
         <div><p class="cart--item--name">{{ subStringProduct(product.name) }}</p></div>
-        <div><p class="cart--item--price">₹ {{ product.price * product.count }}</p></div>
+        <div><p class="cart--item--price">₹ {{ product.price * product.quantity }}</p></div>
       </div>
 
       </div>
@@ -24,7 +24,7 @@
         </button>
        <div>
         <p class="my-0 mx-3 cart--item--count">
-          {{ product.count }}
+          {{ product.quantity }}
         </p>
        </div>
         <button

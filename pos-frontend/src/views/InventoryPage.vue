@@ -62,7 +62,7 @@
         </div>
       </div>
     </div>
-    <InventoryActionModal v-if="true" :modalData="modalData" @close-modal="showModal = false" />
+    <InventoryActionModal v-if="true" :modalData="modalData" />
   </div>
 </template>
 <script>
@@ -88,6 +88,7 @@ export default {
   },
   methods: {
     showModalToggle(data) {
+      // alert(data)
       this.showModal = true;
       this.selectedProduct = data
     },

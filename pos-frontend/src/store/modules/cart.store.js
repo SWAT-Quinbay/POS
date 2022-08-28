@@ -8,7 +8,7 @@ export default {
             return state.cartProductList;
         },
         getTotalPrice(state){
-            return Math.floor(state.cartProductList.reduce((accum,item) => accum + (item.price * item.count), 0))
+            return Math.floor(state.cartProductList.reduce((accum,item) => accum + (item.price * item.quantity), 0))
         },
         getTax(state){
           return state.tax;
@@ -18,7 +18,7 @@ export default {
         addProductToCart(state, { product }) {
           console.log(product)
             const constructedProduct = {
-              count: 0,
+              quantity: 0,
               id: product.id,
               imageurl: product.imageurl,
               description : product.description,
@@ -27,14 +27,14 @@ export default {
             };
             let item = state.cartProductList.find((item) => item.id == product.id);
             if (item){
-              item.count++;
+              item.quantity++;
             }
-            else state.cartProductList.push({ ...constructedProduct, count: 1 });
+            else state.cartProductList.push({ ...constructedProduct, quantity: 1 });
           },
       
           decreaseProductQuantity(state, { productId }) {
             let item = state.cartProductList.find((item) => item.id == productId);
-            if (item.count > 1) item.count--;
+            if (item.quantity > 1) item.quantity--;
           },
       
           removeProductFromCart(state, { productIndex }) {
