@@ -1,25 +1,26 @@
 package com.example.orderManagementService;
 
-import com.example.orderManagementService.customException.PostgresException;
+import com.example.orderManagementService.customException.*;
 import com.example.orderManagementService.models.Order;
+import com.example.orderManagementService.utils.JsonOrder;
+import com.example.orderManagementService.utils.InventoryProduct;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 public interface OrderService {
 
-    Order getById(int employeeId) throws PostgresException;
+    Order getById(int orderId) throws OrderNotFoundException;
 
-    List<Order> getAll();
+    Page<Order> getAll(int page, int size);
 
-    Order postEmployee(Order order);
+    Order postOrder(JsonOrder order) throws InvalidQuantityException, NotEnoughQuanityException;
 
-    List<Order> postEmployee(List<Order> order);
+    List<Order> postOrder(List<JsonOrder> order) throws InvalidQuantityException, NotEnoughQuanityException;
 
-    List<Order> postViaKufka(String datas) throws JsonProcessingException;
+    void updateInventoryViaKafka(List<InventoryProduct> orderItems) throws JsonProcessingException;
 
-    Order putEmployee(Order employee) throws PostgresException;
-
-    Order deleteEmployee(int employeeId) throws PostgresException;
+    Order cancelOrder(int orderId) throws JsonProcessingException, OrderAlreadyCanceledException, OrderNotFoundException;
 
 }

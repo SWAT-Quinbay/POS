@@ -1,5 +1,8 @@
 package com.example.inventoryManagementService;
 
+import com.example.inventoryManagementService.customExceptions.InvalidDataProvidedException;
+import com.example.inventoryManagementService.customExceptions.NotEnoughQuanityException;
+import com.example.inventoryManagementService.customExceptions.ProductNotFoundException;
 import com.example.inventoryManagementService.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,7 +14,8 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api")
+@CrossOrigin(origins = "*")
+@RequestMapping("/inventory")
 public class InventoryController {
 
     @Autowired
@@ -22,8 +26,10 @@ public class InventoryController {
     public Product getProductById(@PathVariable("id") int id) {
         try {
             return inventoryService.getById(id);
-        } catch (Exception e) {
+        } catch (ProductNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }catch (Exception e){
+            throw  new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage());
         }
     }
 
@@ -37,11 +43,11 @@ public class InventoryController {
     }
 
     @GetMapping("/search")
-    public List<Product> searchProductByName(@RequestParam String name,@RequestParam int page,@RequestParam int size) {
+    public List<Product> searchProductByName(@RequestParam String name) {
         try {
             return inventoryService.searchByName(name);
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
@@ -50,27 +56,49 @@ public class InventoryController {
         try {
             return inventoryService.getAll(page,size);
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
-    @PostMapping("/")
-    public Product postProduct(@RequestBody Product employee) {
+    @PostMapping("/add")
+    public Product postProduct(@RequestBody Product product) {
 
         try {
-            return inventoryService.postProduct(employee);
+            return inventoryService.postProduct(product);
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
 
-    @PostMapping("/bunch")
-    public Iterable<Product> postAllProduct(@RequestBody List<Product> employees) {
+    @PostMapping("/add/all")
+    public Iterable<Product> postAllProduct(@RequestBody List<Product> products) {
         try {
-            return inventoryService.postProduct(employees);
+            return inventoryService.postProduct(products);
         } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+    @PostMapping("/stock/")
+    public boolean checkProductStock(@RequestBody Product product){
+        try {
+            return inventoryService.checkStocks(product);
+        }catch (ProductNotFoundException | NotEnoughQuanityException | InvalidDataProvidedException e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+    @PostMapping("/stock/all")
+    public boolean checkProductStocks(@RequestBody List<Product> products){
+        try {
+            return inventoryService.checkStocks(products);
+        }catch (ProductNotFoundException | NotEnoughQuanityException | InvalidDataProvidedException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
@@ -78,8 +106,10 @@ public class InventoryController {
     public boolean incrementProductQuantity(@RequestBody Product product){
         try {
             return inventoryService.incrementQuantity(product);
-        }catch (Exception e){
+        }catch (ProductNotFoundException | InvalidDataProvidedException e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
@@ -87,8 +117,10 @@ public class InventoryController {
     public boolean incrementProductsQuantity(@RequestBody List<Product> products){
         try {
             return inventoryService.incrementQuantity(products);
-        }catch (Exception e){
+        }catch (ProductNotFoundException | InvalidDataProvidedException e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
@@ -96,8 +128,10 @@ public class InventoryController {
     public boolean reduceQuantityProduct(@RequestBody Product product){
         try {
             return inventoryService.reduceQuantity(product);
-        }catch (Exception e){
+        }catch (ProductNotFoundException | InvalidDataProvidedException e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
@@ -105,8 +139,10 @@ public class InventoryController {
     public boolean reduceQuantityProducts(@RequestBody List<Product> products){
         try {
             return inventoryService.reduceQuantity(products);
-        }catch (Exception e){
+        }catch (ProductNotFoundException | InvalidDataProvidedException e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
@@ -115,17 +151,22 @@ public class InventoryController {
 
         try {
             return inventoryService.putProduct(product);
-        } catch (Exception e) {
+        }catch (ProductNotFoundException | InvalidDataProvidedException e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
     @DeleteMapping("/{productId}")
     public Product deleteProduct(@PathVariable int productId) {
         try {
-            return inventoryService.deleteEmployee(productId);
-        } catch (Exception e) {
+            return inventoryService.deleteProduct(productId);
+        }catch (ProductNotFoundException e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 

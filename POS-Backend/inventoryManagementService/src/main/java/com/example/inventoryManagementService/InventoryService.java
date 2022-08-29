@@ -1,9 +1,6 @@
 package com.example.inventoryManagementService;
 
-import com.example.inventoryManagementService.customExceptions.InvalidDataProvidedException;
-import com.example.inventoryManagementService.customExceptions.NotEnoughQuanityException;
-import com.example.inventoryManagementService.customExceptions.PostgresException;
-import com.example.inventoryManagementService.customExceptions.ProductNotFoundException;
+import com.example.inventoryManagementService.customExceptions.*;
 import com.example.inventoryManagementService.models.Product;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.data.domain.Page;
@@ -12,7 +9,7 @@ import java.util.List;
 
 public interface InventoryService {
 
-    Product getById(int productId) throws PostgresException;
+    Product getById(int productId) throws ProductNotFoundException;
 
     List<Product> getByName(String name);
 
@@ -24,17 +21,19 @@ public interface InventoryService {
 
     Iterable<Product> postProduct(List<Product> product);
 
-    Iterable<Product> incrementQuantityViaKafka(String data)
-            throws JsonProcessingException, ProductNotFoundException, NotEnoughQuanityException;
+    Iterable<Product> incrementQuantityViaKafka(String data) throws JsonProcessingException, ProductNotFoundException, InvalidDataProvidedException;
 
-    boolean incrementQuantity(Product product) throws ProductNotFoundException, NotEnoughQuanityException;
-    boolean incrementQuantity(Iterable<Product> product) throws ProductNotFoundException, NotEnoughQuanityException;
+    boolean checkStocks(Product product) throws ProductNotFoundException, NotEnoughQuanityException, InvalidDataProvidedException;
+    boolean checkStocks(List<Product> product) throws ProductNotFoundException, NotEnoughQuanityException, InvalidDataProvidedException;
 
-    boolean reduceQuantity(Product product) throws ProductNotFoundException, NotEnoughQuanityException;
-    boolean reduceQuantity(List<Product> product) throws ProductNotFoundException, NotEnoughQuanityException;
+    boolean incrementQuantity(Product product) throws ProductNotFoundException, InvalidDataProvidedException;
+    boolean incrementQuantity(List<Product> product) throws ProductNotFoundException, InvalidDataProvidedException;
 
-    Product putProduct(Product product) throws PostgresException, InvalidDataProvidedException;
+    boolean reduceQuantity(Product product) throws ProductNotFoundException, NotEnoughQuanityException, InvalidDataProvidedException;
+    boolean reduceQuantity(List<Product> product) throws ProductNotFoundException, NotEnoughQuanityException, InvalidDataProvidedException;
 
-    Product deleteEmployee(int employeeId) throws PostgresException;
+    Product putProduct(Product product) throws  InvalidDataProvidedException, ProductNotFoundException;
+
+    Product deleteProduct(int productId) throws ProductNotFoundException;
 
 }

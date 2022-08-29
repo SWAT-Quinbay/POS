@@ -1,36 +1,36 @@
 import axios from "axios";
 import { baseUrl } from "@/utils/urls"
 
-export const addNewProduct = ({ productData , success ,  error}) => {
+export const addNewProduct = ({ productData , successCallback ,  errrorCallback}) => {
   axios
-    .post(`${baseUrl}` , productData)
+    .post(`${baseUrl}/add` , productData)
     .then((response) => {
-      success && success(response);
+      successCallback && successCallback(response);
     })
     .catch((e) => {
-      error && error(e);
+      errrorCallback && errrorCallback(e);
     });
 }
 
-export const updateProductDetail = ({ productId , productData , success ,  error}) => {
+export const updateProductDetail = ({ productData , successCallback ,  errrorCallback}) => {
     axios
-      .put(`${baseUrl}/${productId}`,productData)
+      .put(`${baseUrl}`,productData)
       .then((response) => {
-        success && success(response);
+        successCallback && successCallback(response);
       })
       .catch((e) => {
-        error && error(e);
+        errrorCallback && errrorCallback(e);
       });
   }
 
-  export const deleteProductData = ({ productId , success ,  error}) => {
+  export const deleteProductData = ({ productId , successCallback ,  errrorCallback}) => {
     axios
       .delete(`${baseUrl}/${productId}`)
       .then((response) => {
-        success && success(response);
+        successCallback && successCallback(response);
       })
       .catch((e) => {
-        error && error(e);
+        errrorCallback && errrorCallback(e);
       });
   }
 
@@ -45,14 +45,14 @@ export const updateProductDetail = ({ productId , productData , success ,  error
       });
   }
 
-export const getInventory = ({ success, error }) => {
+export const getInventory = ({ successCallback, errrorCallback }) => {
   axios
-    .get(`${baseUrl}`)
+    .get(`${baseUrl}/all?page=0&size=100`)
     .then((response) => {
-      success && success(response);
+      successCallback && successCallback(response);
     })
     .catch((e) => {
-      error && error(e);
+      errrorCallback && errrorCallback(e);
     });
 }
 

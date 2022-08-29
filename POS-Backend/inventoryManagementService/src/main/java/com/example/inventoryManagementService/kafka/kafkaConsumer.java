@@ -1,4 +1,4 @@
-package kafka;
+package com.example.inventoryManagementService.kafka;
 
 import com.example.inventoryManagementService.InventoryService;
 import com.example.inventoryManagementService.customExceptions.NotEnoughQuanityException;
@@ -18,16 +18,13 @@ public class kafkaConsumer {
     @Autowired
     private Logger logger;
 
-    @KafkaListener(topics="database",groupId="group_id")
+
+    @KafkaListener(topics="updateInventory", groupId = "group-1")
     public void consume(String message){
         try {
             logger.info("Data Consumed BY dataBase "+ message);
             inventoryService.incrementQuantityViaKafka(message);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        } catch (NotEnoughQuanityException e) {
-            e.printStackTrace();
-        } catch (ProductNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

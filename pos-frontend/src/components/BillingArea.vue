@@ -54,7 +54,7 @@
     <div class="billing--payment--card">
       <p class="billing--payment--header">Payment Method</p>
       <select v-model="paymentMethod" name="payment-option" id="payment-method">
-        <option :value="null">Select Payment option</option>
+        <!-- <option value="Card">Card</option> -->
         <option
           v-for="(data, index) in ['Cash', 'Debit Card', 'Credit Card']"
           :key="index"
@@ -68,13 +68,15 @@
           label="Place Order"
           @onClick="generateBilling()"
           type="button"
-          data-bs-toggle="modal"
-          data-bs-target="#billingModal"
         />
       </div>
     </div>
 
-    <BillingModal modalAccessIdName="billingModal" v-show="showBillingModal" />
+    <BillingModal
+      v-if="showBillingModal"
+      @closeModal="closeModalToggle"
+      :paymentMethod="paymentMethod"
+    />
   </div>
 </template>
 <script>
@@ -87,10 +89,10 @@ export default {
   name: "BillingArea",
   data() {
     return {
-      paymentMethod: null,
+      paymentMethod: "Cash",
       placeOrderLoader: false,
       orderDataToModal: {},
-      showBillingModal : false
+      showBillingModal: false,
     };
   },
   components: {
@@ -112,35 +114,11 @@ export default {
     },
   },
   methods: {
+    closeModalToggle() {
+      this.showBillingModal = false;
+    },
     generateBilling() {
-      const orderData = {
-        products: this.cartProducts,
-        subTotal: this.totalPrice,
-        netTotal: this.totalPrice + this.tax,
-        tax: this.tax,
-        paymentMethod: this.paymentMethod,
-        status : "created"
-      };
-
-      this.showBillingModal = true
-
-      this.orderDataToModal = orderData;
-
-      // createNewOrder({
-      //   orderData,
-      //   successCallback: (res) => {
-      //     console.log(res)
-      //     if(res.status === 200){
-
-      //     }else{
-
-      //     }
-      //     // commit("updateSearchList", data);
-      //   },
-      //   errrorCallback: (errorResponse) => {
-      //     console.log(errorResponse);
-      //   },
-      // });
+      this.showBillingModal = true;
     },
   },
 };

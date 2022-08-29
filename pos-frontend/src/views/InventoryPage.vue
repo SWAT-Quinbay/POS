@@ -1,78 +1,223 @@
 <template>
-<div>
-   <div class="inventory">
-  <table  class="sfdk">
-    <tr><th><h2 style=" color:#FF6665;font-family:Impact,fantasy;">INVENTORIES</h2></th>
-        <th></th><th></th><th style="display:;"><input style="border-radius:10px; height:30px;width:250px;" type="text" placeholder="search inventory"><button style="color:white; font-size:15px; width:30px"><font-awesome-icon icon="fa-solid fa-magnifying-glass" /></button></th></tr>
-    <tr style="color:white; font-size:18px; background:black;"><th></th>
-        <th>ID</th>
-        <th>Name</th>
-         <th>Price</th>
-         <th></th>
-         </tr>
-
-    <tr v-for="(items,index) in product" :key=index>
-        <td style="padding-right:20px;"><img style="border-radius:8px;" :src="items.image" height="100px" width="100px"></td>
-        <td style="padding-right:20px;">{{items.id}}</td>
-        <td style="padding-right:20px;">{{items.name}}</td>
-        <td style="padding-left:20px;">{{items.price}}
-         <button @click="show()" style="color:black; margin-left:50px;" type="button">Edit</button></td>
-        </tr>
-  </table>
-</div>
- <ModalComponent v-show="showModal" @close-modal="showModal=false"/>
- </div>
+  <div>
+    <div class="container-fluid mt-5">
+      <div class="search--card">
+        <div class="row align-items-center">
+          <div class="col-12 col-md-6 col-lg-8 my-2">
+            <input
+              type="search"
+              class="search--bar"
+              v-model="searchKey"
+              @blur="searchForProduct(searchKey)"
+              placeholder="Search Product" 
+            />
+          </div>
+          <div class="col-6 col-md-3 col-lg-2 my-2">
+            <ButtonComponent
+              label="Search"
+              buttonStyle="btn--primary"
+              @onClick="searchForProduct(searchKey)"
+              type="button"
+            />
+          </div>
+          <div class="col-6 col-md-3 col-lg-2 my-2">
+            <ButtonComponent
+              label="Add Product"
+              buttonStyle="btn--primary--outline"
+              @onClick="addProduct()"
+              type="button"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="inventory--table my-4">
+        <div class="table-responsive">
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th scope="col">
+                  <p class="inventory--table--th">Product Id</p>
+                </th>
+                <th scope="col">
+                  <p class="inventory--table--th">Product Name</p>
+                </th>
+                <th scope="col">
+                  <p class="inventory--table--th">Description</p>
+                </th>
+                <th scope="col">
+                  <p class="inventory--table--th">Price</p>
+                </th>
+                <th scope="col">
+                  <p class="inventory--table--th">Quantity</p>
+                </th>
+                <th scope="col">
+                  <p class="inventory--table--th">Edit</p>
+                </th>
+                <th scope="col">
+                  <p class="inventory--table--th">Delete</p>
+                </th>
+              </tr>
+            </thead>
+            <tbody class="">
+              <InventoryListItem
+                v-for="(data, index) in products"
+                :key="index"
+                :product="data"
+                @triggerModalFromList="selectedProductFromList"
+              />
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <InventoryActionModal
+      v-if="showModal"
+      @closeModal="closeModalToggle"
+      @callBackForAction="updateProductDB"
+      :modalObjectData="selectedProduct"
+    />
+  </div>
 </template>
 <script>
-import demoProducts from '../utils/demoProducts'
-import ModalComponent from './ModalComponent.vue'
+import { mapGetters } from "vuex";
+// import products from "../utils/demoProducts";
+import InventoryActionModal from "@/components/InventoryActionModal.vue";
+import ButtonComponent from "@/components/ButtonComponent.vue";
+import InventoryListItem from "@/components/InventoryListItem.vue";
+import Vue from "vue";
+import {
+  updateProductDetail,
+  addNewProduct,
+} from "@/service/product.service.js";
+
 export default {
-     name : "InventoryPage",
-     data(){
-        return{
-            product:demoProducts,
-             showModal:false
-        }
-     },
-     components:{
-        ModalComponent
-     },
-     methods:
-     {
-       show()
-       {
-          this.showModal=true;
-       }
-     }
-    
-}
+  name: "InventoryPage",
+  data() {
+    return {
+      searchKey : "",
+      // product: products,
+      showModal: false,
+      selectedProduct: {},
+    };
+  },
+  components: {
+    InventoryActionModal,
+    ButtonComponent,
+    InventoryListItem,
+  },
+  methods: {
+    selectedProductFromList(data) {
+      // alert(data)
+      this.showModal = true;
+      this.selectedProduct = data;
+    },
+    addProduct() {
+      const constructedData = {
+        modalHeader: "Add New Product",
+        productData: null,
+        modalButtonName: "Create Product",
+      };
+      this.showModal = true;
+      this.selectedProduct = constructedData;
+    },
+    closeModalToggle() {
+      this.showModal = false;
+      this.selectedProduct = {};
+    },
+    updateProductDB(product) {
+      console.log(product);
+      if (!product.id) {
+        addNewProduct({
+          productData: product,
+          successCallback: (res) => {
+            console.log(res);
+            if (res.status === 200) {
+              Vue.$toast.success("Inventory Updated!");
+              this.$store.dispatch("SEARCH_THE_PRODUCT")
+            } else {
+              Vue.$toast.error();
+              ("Updated Process declined!");
+            }
+          },
+          errrorCallback: (err) => {
+            Vue.$toast.error(err);
+          },
+        });
+      } else {
+        updateProductDetail({
+          productData: product,
+          successCallback: (res) => {
+            console.log(res);
+            if (res.status === 200) {
+              Vue.$toast.success("Inventory Updated!");
+              this.$store.dispatch("SEARCH_THE_PRODUCT")
+            } else {
+              Vue.$toast.error();
+              ("Updated Process declined!");
+            }
+          },
+          errrorCallback: (err) => {
+            Vue.$toast.error(err);
+          },
+        });
+      }
+
+      this.showModal = false;
+    },
+    searchForProduct(searchKey){
+      this.$store.dispatch("SEARCH_THE_PRODUCT", searchKey)
+    }
+  },
+  created() {
+    // this.$store.dispatch("GET_PRODUCT_LIST");
+    this.$store.dispatch("SEARCH_THE_PRODUCT")
+  },
+  computed: {
+    ...mapGetters({
+      productList: "getProductList",
+      products : "getSearchList"
+    }),
+  },
+};
 </script>
-<style>
-.inventory{
-   width:80% ; 
-   margin-left:15%;
-   background: white; 
-    border:2px solid black;
-    border-radius:35px;
-     padding-left:10px;
+<style scoped>
+.search--card {
+  background-color: #ffffff;
+  padding: 10px;
+  border-radius: 10px;
 }
-.table td{
-    
-    background:white;
-     border: 5px solid rgb(0, 0, 0);
-     padding-right: 5px;
+
+.inventory--table {
+  background-color: #ffffff;
+  /* padding: 10px; */
+  border-radius: 10px;
 }
-.table tr{
-    border: 5px solid rgb(0, 0, 0);
+
+.inventory--container {
 }
-/* .table tr{
-    border: 4px solid darkgrey;
-    border-radius:50px;
-} */
-.table button{
-    color:black;
-    font-family: fantasy;
-    border-radius: 8px;
+
+.inventory--single--list {
+  border: 0.5px solid #1b1b1b;
+  margin: 0;
+}
+
+.search--bar {
+  background-color: #f1f1f1;
+  border: 0.7px solid #e2e2e2;
+  height: 40px;
+  border-radius: 10px;
+  padding-left: 10px;
+  width: 100%;
+}
+
+.search--bar:focus {
+  border: 1.5px solid #ff6665;
+  outline: none;
+}
+
+.inventory--table--th {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 5px;
 }
 </style>
-
