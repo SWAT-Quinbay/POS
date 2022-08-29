@@ -1,8 +1,6 @@
 package com.example.orderManagementService;
 
-import com.example.orderManagementService.customException.InvalidQuantityException;
-import com.example.orderManagementService.customException.OrderAlreadyCanceledException;
-import com.example.orderManagementService.customException.PostgresException;
+import com.example.orderManagementService.customException.*;
 import com.example.orderManagementService.models.Order;
 import com.example.orderManagementService.models.OrderItem;
 import com.example.orderManagementService.repository.OrderItemRepository;
@@ -60,7 +58,7 @@ public class OrderServiceImp implements OrderService {
     Logger logger;
 
     @Override
-    public Order getById(int orderId) throws PostgresException {
+    public Order getById(int orderId) throws OrderNotFoundException {
 
         Optional<Order> order  = orderRepository.findById(orderId);
 
@@ -68,19 +66,19 @@ public class OrderServiceImp implements OrderService {
             return order.get();
         }
 
-        throw new PostgresException("Invalid Order Id");
+        throw new OrderNotFoundException("Invalid Order Id");
     }
 
     @Override
     public Page<Order> getAll(int page,int size) {
-        PageRequest pr = PageRequest.of(page,size,Sort.by("createdTime").ascending());
+        PageRequest pr = PageRequest.of(page,size,Sort.by("createdTime").descending());
 
         return orderRepository.findAll(pr);
 
     }
 
     @Override
-    public Order postOrder(JsonOrder jsonOrder) throws PostgresException, InvalidQuantityException {
+    public Order postOrder(JsonOrder jsonOrder) throws InvalidQuantityException, NotEnoughQuanityException {
         Order order = OrderJsonParser.extractOrder(jsonOrder);
 
         List<InventoryProduct> inventoryProducts = OrderJsonParser.extractInventoryProduct(jsonOrder);
@@ -88,7 +86,7 @@ public class OrderServiceImp implements OrderService {
 //       Check having enough stocks
         boolean result = checkStockInInventory(inventoryProducts);
         if(!result){
-            throw new PostgresException("Not enough Stocks in inventory");
+            throw new NotEnoughQuanityException("Not enough Stocks in inventory");
         }
 
         //calculate Total
@@ -124,7 +122,7 @@ public class OrderServiceImp implements OrderService {
 
 
     @Override
-    public List<Order> postOrder(List<JsonOrder> jsonOrders) throws PostgresException, InvalidQuantityException {
+    public List<Order> postOrder(List<JsonOrder> jsonOrders) throws NotEnoughQuanityException, InvalidQuantityException {
 
         List<Order> orders = new ArrayList<>();
         for(JsonOrder jsonOrder : jsonOrders){
@@ -144,18 +142,17 @@ public class OrderServiceImp implements OrderService {
     }
 
     @Override
-    public Order cancelOrder(int orderId) throws PostgresException, JsonProcessingException, OrderAlreadyCanceledException {
+    public Order cancelOrder(int orderId) throws OrderNotFoundException, JsonProcessingException, OrderAlreadyCanceledException {
 
         Order order = getById(orderId);
 
         if(order.getStatus().equals(CANCELED)){
             throw new OrderAlreadyCanceledException("The Order is Already Canceled.");
         }
-
         List<InventoryProduct> inventoryProducts = OrderJsonParser.extractInventoryProduct(order.getOrderItems());
         updateInventoryViaKafka(inventoryProducts);
         order.setStatus(CANCELED);
-
+        orderRepository.save(order);
         return order;
     }
 }

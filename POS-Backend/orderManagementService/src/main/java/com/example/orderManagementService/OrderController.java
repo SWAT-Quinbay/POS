@@ -1,5 +1,9 @@
 package com.example.orderManagementService;
 
+import com.example.orderManagementService.customException.InvalidQuantityException;
+import com.example.orderManagementService.customException.NotEnoughQuanityException;
+import com.example.orderManagementService.customException.OrderAlreadyCanceledException;
+import com.example.orderManagementService.customException.OrderNotFoundException;
 import com.example.orderManagementService.models.Order;
 import com.example.orderManagementService.utils.JsonOrder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +15,9 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 
-@CrossOrigin(origins = "*")
+
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/order")
 public class OrderController {
 
@@ -25,7 +30,7 @@ public class OrderController {
         try {
             return orderService.getAll(page,size);
         }catch (Exception e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage());
         }
     }
 
@@ -34,8 +39,10 @@ public class OrderController {
 
         try {
             return orderService.getById(id);
+        } catch (OrderNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }catch (Exception e){
-            throw  new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
+            throw  new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage());
         }
 
     }
@@ -46,9 +53,10 @@ public class OrderController {
 
         try {
             return orderService.postOrder(jsonOrder);
+        } catch (InvalidQuantityException | NotEnoughQuanityException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }catch (Exception e){
-            e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
+            throw  new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage());
         }
 
     }
@@ -58,8 +66,10 @@ public class OrderController {
     public List<Order> postAllOrder(@RequestBody List<JsonOrder> orders){
         try {
             return orderService.postOrder(orders);
+        } catch (InvalidQuantityException | NotEnoughQuanityException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }catch (Exception e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
+            throw  new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage());
         }
     }
 
@@ -68,8 +78,10 @@ public class OrderController {
     public Order cancelOrder(@PathVariable int orderId){
         try {
             return orderService.cancelOrder(orderId);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
+        } catch (OrderAlreadyCanceledException | OrderNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }catch (Exception e){
+            throw  new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage());
         }
     }
 

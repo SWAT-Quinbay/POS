@@ -1,8 +1,6 @@
 package com.example.orderManagementService;
 
-import com.example.orderManagementService.customException.InvalidQuantityException;
-import com.example.orderManagementService.customException.OrderAlreadyCanceledException;
-import com.example.orderManagementService.customException.PostgresException;
+import com.example.orderManagementService.customException.*;
 import com.example.orderManagementService.models.Order;
 import com.example.orderManagementService.utils.JsonOrder;
 import com.example.orderManagementService.utils.InventoryProduct;
@@ -13,16 +11,16 @@ import java.util.List;
 
 public interface OrderService {
 
-    Order getById(int orderId) throws PostgresException;
+    Order getById(int orderId) throws OrderNotFoundException;
 
     Page<Order> getAll(int page, int size);
 
-    Order postOrder(JsonOrder order) throws PostgresException, InvalidQuantityException;
+    Order postOrder(JsonOrder order) throws InvalidQuantityException, NotEnoughQuanityException;
 
-    List<Order> postOrder(List<JsonOrder> order) throws PostgresException, InvalidQuantityException;
+    List<Order> postOrder(List<JsonOrder> order) throws InvalidQuantityException, NotEnoughQuanityException;
 
     void updateInventoryViaKafka(List<InventoryProduct> orderItems) throws JsonProcessingException;
 
-    Order cancelOrder(int orderId) throws PostgresException, JsonProcessingException, OrderAlreadyCanceledException;
+    Order cancelOrder(int orderId) throws JsonProcessingException, OrderAlreadyCanceledException, OrderNotFoundException;
 
 }
