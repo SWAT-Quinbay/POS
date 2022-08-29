@@ -56,6 +56,8 @@
 
     	- Step 1 (install nodemodules)
     		- npm i
+    	- Step 2 (Edit backend base url)
+    		- edit backend base_url in ```/pos-frontend/utils/urls.js```
     	- Step 2 (run the application)
     		- npm run serve
 
