@@ -4,8 +4,19 @@ import App from './App.vue'
 import { BootstrapVue } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import VueToast from 'vue-toast-notification';
+// Import one of the available themes
+//import 'vue-toast-notification/dist/theme-default.css';
+import 'vue-toast-notification/dist/theme-sugar.css';
+
+// Vue.use(VueToast);
 
 Vue.use(BootstrapVue)
+
+Vue.use(VueToast, {
+  position: "bottom-right",
+  duration: 4000
+});
 
 import store from  "@/store/index";
 import router from "@/router/index"

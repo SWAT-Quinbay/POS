@@ -1,3 +1,5 @@
+import Vue from "vue";
+
 export default {
     state : {
         cartProductList : [],
@@ -18,18 +20,26 @@ export default {
         addProductToCart(state, { product }) {
           console.log(product)
             const constructedProduct = {
-              quantity: 0,
+              quantity: 1,
+              inventoryQuantity : product.quantity,
               id: product.id,
-              imageurl: product.imageurl,
+              imageUrl: product.imageUrl,
               description : product.description,
               name: product.name,
               price : product.price
             };
             let item = state.cartProductList.find((item) => item.id == product.id);
             if (item){
-              item.quantity++;
+              if(item.quantity < item.inventoryQuantity){
+                item.quantity++;
+              }else{
+                Vue.$toast.error("Out of Stock, Please go for other!");
+              }
+              
             }
-            else state.cartProductList.push({ ...constructedProduct, quantity: 1 });
+            else{
+              state.cartProductList.push({ ...constructedProduct });
+            }
           },
       
           decreaseProductQuantity(state, { productId }) {

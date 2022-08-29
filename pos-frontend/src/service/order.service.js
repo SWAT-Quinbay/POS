@@ -1,14 +1,25 @@
 import axios from "axios";
 import {  orderBaseUrl } from "@/utils/urls"
 
-export const createNewOrder = ({ orderData , success ,  error}) => {
+export const createNewOrder = ({ orderData , successCallback ,  errrorCallback}) => {
   axios
     .post(`${orderBaseUrl}/add`, orderData)
     .then((response) => {
-      success && success(response);
+      successCallback && successCallback(response);
     })
     .catch((e) => {
-      error && error(e);
+      errrorCallback && errrorCallback(e);
+    });
+}
+
+export const cancelOrder = ({ orderId , successCallback ,  errrorCallback}) => {
+  axios
+    .get(`${orderBaseUrl}/cancel/${orderId}`)
+    .then((response) => {
+      successCallback && successCallback(response);
+    })
+    .catch((e) => {
+      errrorCallback && errrorCallback(e);
     });
 }
 

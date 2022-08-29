@@ -1,63 +1,110 @@
 <template>
-  <b-modal
-      title="Modal Variants"
-    >
-      <div><h1>Hello world</h1></div>
-    </b-modal>
+  <div class="modal--bg">
+    <div class="modal--content">
+    <div class="modal--header d-flex justify-content-between align-items-center">
+      <div>
+        <p class="modal--header--text">{{ modalHeader }}</p>
+      </div>
+      <div>
+        <span class="close" @click="closeModal">&times;</span>
+      </div>
+    </div>
+        <div class="modal--body">
+          <div class="action--form--controller">
+            <label for="product-name" class="action--input--label">Product Name</label>
+            <input type="text" v-model="product.name" class="action--input" placeholder="Enter Product Name">
+          </div>
+           <div class="action--form--controller">
+            <label for="product-name" class="action--input--label">Product Image Url</label>
+            <input type="text" v-model="product.imageUrl" class="action--input" placeholder="Paste Imgage Url">
+          </div>
+          <div class="action--form--controller">
+            <label for="product-description" class="action--input--label">Product Description</label>
+            <input type="text" v-model="product.description" class="action--input" placeholder="Enter Product Description">
+          </div>
+          <div class="action--form--controller">
+            <label for="product-price" class="action--input--label">Product Price</label>
+            <input type="text" v-model="product.price" class="action--input" placeholder="Enter Product Price">
+          </div>
+          <div class="action--form--controller">
+            <label for="product-quantity" class="action--input--label">Product Quantity</label>
+            <input type="text" v-model="product.quantity" class="action--input" placeholder="Enter Product Quantity">
+          </div>
+        </div>
+
+        <div class="modal--footer">
+           <div class="d-flex justify-content-end gap-1">
+            <div class="col-3">
+              <ButtonComponent
+              label="Close"
+              buttonStyle="btn--primary--outline"
+              @onClick="closeModal()"
+              type="button"
+            />
+            </div>
+            <div class="col-auto">
+            <ButtonComponent
+              :label="modalButtonLabel"
+              buttonStyle="btn--primary"
+              @onClick="actionToDB()"
+              type="button"
+            />
+            </div>
+           </div>
+        </div>
+    </div>
+  </div>
 </template>
 
 <script>
-// import ButtonComponent from "@/components/ButtonComponent.vue";
+import ButtonComponent from "@/components/ButtonComponent.vue";
 
 export default {
   data() {
     return {
-      state: false,
-      product : {
-        productName : "",
-        productPrice : 0,
-        productDescription : "",
-        productQuantity : 0
-      }
+        product : {
+          id : "",
+          name : "",
+          imageUrl : "",
+          price : "",
+          quantity : "",
+          description : ""
+        },
+        modalHeader : "",
+        modalButtonLabel : ""
     };
   },
   props: {
-    modalAccessIdName: {
-      type: String,
-      default: "",
-    },
-    modalData : {
+    modalObjectData : {
       type : Object,
       default : () => {}
-    },
-    showModal : {
-      type : Boolean,
-      default :false
     }
   },
   components: {
-    // ButtonComponent,
+    ButtonComponent,
   },
   methods: {
-    showsaved() {
-      return this.state = true;
+    actionToDB(){
+      this.$emit("callBackForAction", this.product)
     },
-    updateInfo(){
-      this.$emit("")
+    closeModal(){
+      this.$emit("closeModal")
     }
-  }
-  // mounted() {
-  //   console.log(this.modalData)
-  //   this.product=this.modalData
-  //   // const OldInfo = {
-  //   //   productName : this.modalData.productData.name,
-  //   //   productPrice : this.modalData.productData.price,
-  //   //   productDescription : this.modalData.productData.description,
-  //   //   productQuantity : this.modalData.productData.quantity
-  //   // }
-  //   // console.log(OldInfo)
-  //   // this.product = OldInfo
-  // },
+  },
+  mounted() {
+    const propsProduct = this.modalObjectData.productData;
+    console.log(this.modalObjectData)
+    if(propsProduct !== null){
+      this.product.id = propsProduct.id;
+      this.product.name = propsProduct.name;
+      this.product.imageUrl = propsProduct.imageUrl;
+      this.product.price = propsProduct.price;
+      this.product.quantity = propsProduct.quantity;
+      this.product.description = propsProduct.description;
+    }
+      this.modalHeader = this.modalObjectData.modalHeader;
+      this.modalButtonLabel = this.modalObjectData.modalButtonName  
+  },
 };
 </script>
 
@@ -90,76 +137,56 @@ export default {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-/* .modover {
+.modal--bg{
   position: fixed;
-  top: 0;
-  bottom: 0;
   left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  background-color: #000000da;
+  top: 0; 
+  z-index: 1;
+  width: 100%;
+  height: 100%; 
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.481); ;
 }
 
-.mod {
-  text-align: left;
-  background-color: white;
-  height: 500px;
-  width: 500px;
-  margin-top: 10%;
-  padding: 60px 0;
-  border: 2px solid #ff6665;
-  border-radius: 20px;
-  padding-left: 25px;
-}
-.mod input {
+
+.modal--content {
+  background-color: #fefefe;
+  margin: 5% auto; 
+  /* padding: 20px; */
+  border: 1px solid #888;
+  width: 40%; 
   border-radius: 10px;
-  width: 300px;
 }
+
 .close {
-  margin: 10% 0 0 16px;
+  color: #aaa;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
   cursor: pointer;
 }
 
-.close-img {
-  width: 25px;
+.modal--header--text{
+  margin: 0;
 }
 
-.check {
-  width: 150px;
+.modal--header{
+  border-bottom: 1px solid rgb(202, 202, 202);
+  padding: 5px 20px;
 }
 
-h6 {
-  font-weight: 500;
-  font-size: 28px;
-  margin: 20px 0;
+.modal--footer{
+  border-top: 1px solid rgb(202, 202, 202);
+  padding: 10px 20px;
 }
 
-p {
-  font-size: 16px;
-  margin: 20px 0;
-  color: black;
+.modal--body{
+  padding: 10px 20px;
 }
 
-button {
-  background-color: #ff6665;
-  width: 100px;
-  height: 40px;
-  color: black;
-  font-size: 14px;
-  border-radius: 16px;
-  margin-top: 50px;
-} */
 </style>

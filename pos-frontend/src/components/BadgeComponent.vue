@@ -1,6 +1,6 @@
 <template >
     <div>
-        <p :class="[ { 'badge--created' : (label === 'Available' || label === 'created'), 'badge--cancelled' : (label === 'Out of Stock' || label === 'cancelled')} , 'badge--basic' ]">{{ label }}</p>
+        <p :class="[ { 'badge--created' : (label === 'Available' || label === 'created'), 'badge--cancelled' : (label === 'Out of Stock' || label === 'canceled')} , 'badge--basic' ]">{{ label }}</p>
     </div>
 </template>
 <script>

@@ -1,5 +1,5 @@
 <template>
-    <button :type="type" @click="onClick()" :class="buttonStyle">{{ label }}</button>
+    <button :type="type" @click="onClick()" :class="buttonStyle" :disabled="disabled">{{ label }}</button>
 </template>
 <script>
 export default {
@@ -77,7 +77,21 @@ export default {
         font-weight: 700;
         border-radius: 10px;
         padding: 5px 15px;
-        background-color: #6D757D;
+        background-color: #a4a4a4;
+    }
+
+    .btn--disabled{
+        color: white;
+        border: 1px solid #ffffff;
+        border: none;
+        outline: none;
+        /* width: 100%; */
+        height: 30px;
+        font-size: 13px;
+        font-weight: 700;
+        border-radius: 10px;
+        padding: 5px 15px;
+        background-color: #cacaca;
     }
 
 </style>

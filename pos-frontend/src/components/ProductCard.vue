@@ -1,11 +1,12 @@
 <template>
     <div>
         <div class="product--card">
-            <img :src="product.imageurl" class="product--image" alt="product">
+            <img :src="product.imageUrl" class="product--image" alt="product">
                 <div class="row text-center mt-4">
                     <div class="col-12">
                         <p class="product--name">{{ product.name }}</p>
                         <p class="product--price">₹ {{ product.price }}</p>
+                        <p class="product--price">Quantity: {{ product.quantity }}</p>
                     </div>
                 </div>
                 <!-- <div class="d-flex justify-content-between align-items-end">
@@ -16,7 +17,7 @@
                         <img :src="product.image" class="product--image" alt="product">
                     </div>
                 </div> -->
-               <div class="mt-3">
+               <div class="mt-3" v-if="product.quantity">
                  <ButtonComponent
                 label="Add to Bag"
                 buttonStyle="btn--primary--outline"
@@ -24,12 +25,16 @@
                 type="button"
             />
                </div>
+               <div v-else class="mx-auto">
+                 <BadgeComponent label="Out of Stock"/>
+               </div>
         </div>
     </div>
 </template>
 <script>
 
 import ButtonComponent from "@/components/ButtonComponent"
+import BadgeComponent from "@/components/BadgeComponent"
 
 export default {
     name : "ProductCard",
@@ -40,7 +45,8 @@ export default {
         }
     },
     components : {
-        ButtonComponent
+        ButtonComponent,
+        BadgeComponent
     },
     methods: {
         addToCart(){
@@ -60,7 +66,8 @@ export default {
         margin-bottom: 20px;
         display: flex;
         flex-direction: column;
-        min-height: 200px;
+        min-height: 350px;
+        /* max-height: ; */
         justify-content: space-between;
     }
 
