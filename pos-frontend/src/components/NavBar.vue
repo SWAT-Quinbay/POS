@@ -44,15 +44,19 @@
               >Inventory</router-link
             >
           </li>
-        </ul>
-        <form class="d-flex" role="search">
-          <ButtonComponent
-              label="Logout"
-              buttonStyle="btn--primary"
-              @onClick="()=>{}"
-              type="button"
+          <li >
+            <ButtonComponent
+                v-if="isAuth"
+                label="Logout"
+                buttonStyle="btn--primary--outline"
+                @onClick="logout()"
+                type="button"
             />
-        </form>
+          </li>
+        </ul>
+        <!-- <div class="d-flex"> -->
+          
+        <!-- </div> -->
       </div>
     </div>
   </nav>
@@ -60,12 +64,34 @@
 <script>
 
 import ButtonComponent from "@/components/ButtonComponent.vue"
+import { mapGetters } from "vuex";
 
 export default {
   name: "NavBar",
-  component : {
+  data() {
+    return {
+      showLogout:false,
+    }
+  },
+  components : {
     ButtonComponent
-  }
+  },
+  computed : {
+    ...mapGetters({
+      isAuth : "getAuthentication"
+    })
+  },
+  methods: {
+    checkIsLoggedIn(){
+      return localStorage.isAuthenticated !== undefined; 
+    },
+    logout(){
+      this.showLogout = false;
+      this.$store.dispatch('VALIDATE_USER',false)
+      localStorage.removeItem('isAuthenticated');
+      this.$router.push(`/login`);  
+    },
+  },
 };
 </script>
 <style scoped>

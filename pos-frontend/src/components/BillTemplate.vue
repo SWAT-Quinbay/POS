@@ -4,7 +4,7 @@
               :show-layout="false"
               :enable-download="true"
               :paginate-elements-by-height="3000"
-              filename="hee hee"
+              :filename="orderData.id + ' - ' + orderData.date"
               :pdf-quality="2"
               :manual-pagination="false"
               pdf-format="a6"

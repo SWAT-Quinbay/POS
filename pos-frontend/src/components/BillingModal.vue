@@ -150,13 +150,13 @@
                 data-bs-dismiss="modal"
               />
             </div>
-            <div class="col-auto">
+            <!-- <div class="col-auto">
               <ButtonComponent
                 label="Download Bill"
                 @onClick="downloadBill()"
                 type="button"
               />
-            </div>
+            </div> -->
             <div class="col-auto">
               <ButtonComponent
                 label="Save and Generate Bill"
@@ -263,13 +263,9 @@ export default {
         date: this.getData,
       };
 
-      console.log(dataToBilling);
 
       this.$refs.billPage.generateBill(dataToBilling);
 
-      // this.billTemData = dataToBilling;
-      // this.billingTemplate = true;
-      // alert(this.getNetPrice)
     },
     createOrder() {
       const dataToDB = {
@@ -285,6 +281,7 @@ export default {
         successCallback: (res) => {
           console.log(res);
           if (res.status === 200) {
+            this.downloadBill();
             Vue.$toast.success("Order Placed Successfully!");
           } else {
             Vue.$toast.error("Order Declined!");

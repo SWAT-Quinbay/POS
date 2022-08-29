@@ -29,7 +29,7 @@
     </td> -->
     <td>
         <ButtonComponent
-          label="Cancel Order"
+          :label="orderStatus  ? 'Order Cancelled' : 'Cancel Order'"
           :buttonStyle="[ orderStatus  ? 'btn--disabled' : 'btn--danger']"
           :disabled="orderStatus ? true : false"
           @onClick="cancelOrderFromOrders(order.id)"

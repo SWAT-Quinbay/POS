@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import Vue from "vue"
 export default {
   data()
   {
@@ -33,10 +34,13 @@ export default {
       console.log("SUBMITTED");
       if(this.userdata.user=="admin"&&this.userdata.password=="admin")
       {
-       localStorage.token = true;
+        localStorage.setItem("isAuthenticated", true);
+        this.$store.dispatch('VALIDATE_USER',true)
+      //  localStorage.token = true;
        this.$router.push(`/`);
     }
     else{
+        Vue.$toast.error("Invalid Cret!")
        this.UnAuthorized=true;
     }
   }
