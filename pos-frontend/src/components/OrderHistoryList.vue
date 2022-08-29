@@ -19,14 +19,6 @@
         </ul>
       </p>
     </td>
-    <!-- <td>
-      <ButtonComponent
-        label="View Invoice"
-        buttonStyle="btn--secondary"
-        data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
-        type="button"
-      />
-    </td> -->
     <td>
         <ButtonComponent
           :label="orderStatus  ? 'Order Cancelled' : 'Cancel Order'"
