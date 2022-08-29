@@ -1,5 +1,6 @@
 package com.example.inventoryManagementService;
 
+import com.example.inventoryManagementService.Authentication.Constants;
 import com.example.inventoryManagementService.customExceptions.InvalidDataProvidedException;
 import com.example.inventoryManagementService.customExceptions.NotEnoughQuanityException;
 import com.example.inventoryManagementService.customExceptions.ProductNotFoundException;
@@ -15,15 +16,15 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/inventory")
+@RequestMapping(Constants.INVENTORY_BASE_URL)
 public class InventoryController {
 
     @Autowired
     InventoryService inventoryService;
 
 
-    @GetMapping("/id/{id}")
-    public Product getProductById(@PathVariable("id") int id) {
+    @GetMapping(Constants.INVENTORY_GET_BY_ID)
+    public Product getProductById(@PathVariable int id) {
         try {
             return inventoryService.getById(id);
         } catch (ProductNotFoundException e) {
@@ -33,7 +34,7 @@ public class InventoryController {
         }
     }
 
-    @GetMapping("/name/{name}")
+    @GetMapping(Constants.INVENTORY_GET_BY_Name)
     public List<Product> getProductByName(@PathVariable("name") String name) {
         try {
             return inventoryService.getByName(name);
@@ -42,7 +43,7 @@ public class InventoryController {
         }
     }
 
-    @GetMapping("/search")
+    @GetMapping(Constants.INVENTORY_SEARCH)
     public List<Product> searchProductByName(@RequestParam String name) {
         try {
             return inventoryService.searchByName(name);
@@ -51,7 +52,7 @@ public class InventoryController {
         }
     }
 
-    @GetMapping("/all")
+    @GetMapping(Constants.INVENTORY_GET_ALL)
     public Page<Product> getAll(@RequestParam int page, @RequestParam int size) {
         try {
             return inventoryService.getAll(page,size);
@@ -60,7 +61,7 @@ public class InventoryController {
         }
     }
 
-    @PostMapping("/add")
+    @PostMapping(Constants.INVENTORY_ADD)
     public Product postProduct(@RequestBody Product product) {
 
         try {
@@ -71,7 +72,7 @@ public class InventoryController {
     }
 
 
-    @PostMapping("/add/all")
+    @PostMapping(Constants.INVENTORY_ADD_ALL)
     public Iterable<Product> postAllProduct(@RequestBody List<Product> products) {
         try {
             return inventoryService.postProduct(products);
@@ -80,7 +81,7 @@ public class InventoryController {
         }
     }
 
-    @PostMapping("/stock/")
+    @PostMapping(Constants.INVENTORY_CHECK_STOCK)
     public boolean checkProductStock(@RequestBody Product product){
         try {
             return inventoryService.checkStocks(product);
@@ -91,7 +92,7 @@ public class InventoryController {
         }
     }
 
-    @PostMapping("/stock/all")
+    @PostMapping(Constants.INVENTORY_CHECK_STOCK_ALL)
     public boolean checkProductStocks(@RequestBody List<Product> products){
         try {
             return inventoryService.checkStocks(products);
@@ -102,7 +103,7 @@ public class InventoryController {
         }
     }
 
-    @PostMapping("/increment")
+    @PostMapping(Constants.INVENTORY_INCREMENT)
     public boolean incrementProductQuantity(@RequestBody Product product){
         try {
             return inventoryService.incrementQuantity(product);
@@ -113,7 +114,7 @@ public class InventoryController {
         }
     }
 
-    @PostMapping("/increment/all")
+    @PostMapping(Constants.INVENTORY_INCREMENT_ALL)
     public boolean incrementProductsQuantity(@RequestBody List<Product> products){
         try {
             return inventoryService.incrementQuantity(products);
@@ -124,7 +125,7 @@ public class InventoryController {
         }
     }
 
-    @PostMapping("/reduce")
+    @PostMapping(Constants.INVENTORY_REDUCE)
     public boolean reduceQuantityProduct(@RequestBody Product product){
         try {
             return inventoryService.reduceQuantity(product);
@@ -135,7 +136,7 @@ public class InventoryController {
         }
     }
 
-    @PostMapping("/reduce/all")
+    @PostMapping(Constants.INVENTORY_REDUCE_ALL)
     public boolean reduceQuantityProducts(@RequestBody List<Product> products){
         try {
             return inventoryService.reduceQuantity(products);
@@ -146,7 +147,7 @@ public class InventoryController {
         }
     }
 
-    @PutMapping("/")
+    @PutMapping(Constants.INVENTORY_UPDATE)
     public Product putProduct(@RequestBody Product product) {
 
         try {
@@ -159,7 +160,7 @@ public class InventoryController {
         }
     }
 
-    @DeleteMapping("/{productId}")
+    @DeleteMapping(Constants.INVENTORY_DELETE)
     public Product deleteProduct(@PathVariable int productId) {
         try {
             return inventoryService.deleteProduct(productId);

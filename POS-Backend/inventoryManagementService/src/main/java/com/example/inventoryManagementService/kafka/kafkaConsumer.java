@@ -1,5 +1,6 @@
 package com.example.inventoryManagementService.kafka;
 
+import com.example.inventoryManagementService.Authentication.Constants;
 import com.example.inventoryManagementService.InventoryService;
 import com.example.inventoryManagementService.customExceptions.NotEnoughQuanityException;
 import com.example.inventoryManagementService.customExceptions.ProductNotFoundException;
@@ -19,10 +20,10 @@ public class kafkaConsumer {
     private Logger logger;
 
 
-    @KafkaListener(topics="updateInventory", groupId = "group-1")
+    @KafkaListener(topics=Constants.KAFKA_TOPIC, groupId = Constants.KAFKA_GROUP_ID)
     public void consume(String message){
         try {
-            logger.info("Data Consumed BY dataBase "+ message);
+            logger.info("Data Consumed By KAFKA "+ message);
             inventoryService.incrementQuantityViaKafka(message);
         } catch (Exception e) {
             e.printStackTrace();

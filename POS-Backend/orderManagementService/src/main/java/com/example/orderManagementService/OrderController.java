@@ -6,6 +6,7 @@ import com.example.orderManagementService.customException.OrderAlreadyCanceledEx
 import com.example.orderManagementService.customException.OrderNotFoundException;
 import com.example.orderManagementService.models.Order;
 import com.example.orderManagementService.utils.JsonOrder;
+import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -18,14 +19,14 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/order")
+@RequestMapping(Constants.ORDER_BASE_URL)
 public class OrderController {
 
     @Autowired
     OrderService orderService;
 
 
-    @GetMapping("/all")
+    @GetMapping(Constants.ORDER_GET_ALL)
     public Page<Order> getAll(@RequestParam int page,@RequestParam int size){
         try {
             return orderService.getAll(page,size);
@@ -34,8 +35,8 @@ public class OrderController {
         }
     }
 
-    @GetMapping("/id/{id}")
-    public Order getOrderById(@PathVariable("id") int id){
+    @GetMapping(Constants.ORDER_GET_BY_ID)
+    public Order getOrderById(@PathVariable int id){
 
         try {
             return orderService.getById(id);
@@ -48,7 +49,7 @@ public class OrderController {
     }
 
 
-    @PostMapping("/add")
+    @PostMapping(Constants.ORDER_ADD)
     public Order postOrder(@RequestBody JsonOrder jsonOrder){
 
         try {
@@ -62,7 +63,7 @@ public class OrderController {
     }
 
 
-    @PostMapping("/add/all")
+    @PostMapping(Constants.ORDER_ADD_ALL)
     public List<Order> postAllOrder(@RequestBody List<JsonOrder> orders){
         try {
             return orderService.postOrder(orders);
@@ -74,7 +75,7 @@ public class OrderController {
     }
 
 
-    @GetMapping("/cancel/{orderId}")
+    @GetMapping(Constants.ORDER_CANCEL)
     public Order cancelOrder(@PathVariable int orderId){
         try {
             return orderService.cancelOrder(orderId);

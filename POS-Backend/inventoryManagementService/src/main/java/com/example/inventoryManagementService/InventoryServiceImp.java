@@ -32,13 +32,13 @@ public class InventoryServiceImp implements InventoryService {
     @Override
     public Product getById(int productId) throws ProductNotFoundException {
 
-        Optional<Product> employee = inventoryRepository.findById(productId);
+        Optional<Product> product = inventoryRepository.findById(productId);
 
-        if (!employee.isPresent()) {
+        if (!product.isPresent()) {
             throw new ProductNotFoundException("Product Not Found");
         }
 
-        return employee.get();
+        return product.get();
 
     }
 
@@ -50,7 +50,7 @@ public class InventoryServiceImp implements InventoryService {
     @Override
     public List<Product> searchByName(String query) {
 
-        return inventoryRepository.findAllByNameContainingIgnoreCase(query,Sort.by(Sort.Direction.ASC,"name"));
+        return inventoryRepository.findAllByNameContainingIgnoreCase(query,Sort.by(Sort.Direction.ASC,"name").and(Sort.by(Sort.Direction.DESC,"quantity")));
     }
 
     @Override
@@ -65,8 +65,8 @@ public class InventoryServiceImp implements InventoryService {
     }
 
     @Override
-    public Iterable<Product> postProduct(List<Product> employees) {
-        return inventoryRepository.saveAll(employees);
+    public Iterable<Product> postProduct(List<Product> products) {
+        return inventoryRepository.saveAll(products);
     }
 
     @Override

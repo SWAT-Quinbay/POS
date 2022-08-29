@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
-@CrossOrigin("*")
-@RequestMapping("/")
+@CrossOrigin(origins = "*")
+@RequestMapping(Constants.USER_BASE_URL)
 public class UserController {
 
     @Autowired
     UserService userService;
 
-    @GetMapping("/login")
+    @GetMapping(Constants.USER_LOGIN)
     public boolean getUser(@RequestParam String name,@RequestParam String password){
         try {
             return userService.authenticateUser(name,password);
@@ -25,7 +25,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/register")
+    @PostMapping(Constants.USER_REGISTER)
     public User addUser(@RequestBody User user){
         try {
             return userService.postUser(user);
@@ -33,7 +33,7 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
         }
     }
-    @GetMapping("/auth/id/{id}")
+    @GetMapping(Constants.USER_GET_BY_ID)
     public User addUser(@PathVariable int id){
         try {
             return userService.getUser(id);

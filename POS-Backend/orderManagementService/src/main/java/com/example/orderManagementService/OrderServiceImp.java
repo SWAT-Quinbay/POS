@@ -51,8 +51,6 @@ public class OrderServiceImp implements OrderService {
         this.restTemplate = restTemplateBuilder.build();
     }
 
-    private String TOPIC="updateInventory";
-    private String CANCELED = "canceled";
 
     @Autowired
     Logger logger;
@@ -136,8 +134,8 @@ public class OrderServiceImp implements OrderService {
     public void updateInventoryViaKafka(List<InventoryProduct> orderItems) throws JsonProcessingException {
 
         String payload = objectMapper.writeValueAsString(orderItems);
-        kafkaTemplate.send(TOPIC,UUID.randomUUID().toString(),payload);
-        logger.info("Data Published  " + payload);
+        kafkaTemplate.send(Constants.TOPIC,UUID.randomUUID().toString(),payload);
+        logger.info("Data Published  By KAFKA " + payload);
 
     }
 
@@ -146,12 +144,12 @@ public class OrderServiceImp implements OrderService {
 
         Order order = getById(orderId);
 
-        if(order.getStatus().equals(CANCELED)){
+        if(order.getStatus().equals(Constants.CANCELED)){
             throw new OrderAlreadyCanceledException("The Order is Already Canceled.");
         }
         List<InventoryProduct> inventoryProducts = OrderJsonParser.extractInventoryProduct(order.getOrderItems());
         updateInventoryViaKafka(inventoryProducts);
-        order.setStatus(CANCELED);
+        order.setStatus(Constants.CANCELED);
         orderRepository.save(order);
         return order;
     }
