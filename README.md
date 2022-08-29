@@ -58,9 +58,13 @@ The purpose of this project is to create a model that can predict the sales of a
     		- http://localhost:8081/swagger-ui.html (Order Management Service)
     		- http://localhost:8082/swagger-ui.html (Inventory Management Service)
 
-    	-Step 5 (Add mock data to inventory DB)
+    	-Step 5 (Add mock data)
     		- mock data for inventory in /mockdata/inventory.json
     		- copy the data from json file and paste it in the swagger ui post endpoint (/inventory/add/all)
+
+    		- add Mock user
+    			- http://localhost:8082/register (Post method)
+    			  - ```{"username": "admin" ,"password": "admin"}```
 
 
     - Frontend
