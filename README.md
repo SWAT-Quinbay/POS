@@ -4,7 +4,10 @@
 
 ### Pos for a Store
 
-The purpose of this project is to create a model that can predict the sales of a store.
+The purpose of this project is to cover:
+    - Billing at Store
+    - Manage orders (Sales)
+    - Manage products (Inventory)
 
 ### Frontend
 
