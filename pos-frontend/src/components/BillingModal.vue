@@ -144,7 +144,7 @@
             <div class="col-3">
               <ButtonComponent
                 label="Close"
-                @onClick="() => {}"
+                @onClick="closeModal()"
                 type="button"
                 buttonStyle="btn--primary--outline"
                 data-bs-dismiss="modal"
@@ -281,7 +281,6 @@ export default {
         successCallback: (res) => {
           console.log(res);
           if (res.status === 200) {
-            this.downloadBill();
             Vue.$toast.success("Order Placed Successfully!");
           } else {
             Vue.$toast.error("Order Declined!");

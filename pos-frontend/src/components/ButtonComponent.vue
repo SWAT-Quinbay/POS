@@ -95,7 +95,7 @@ export default {
         font-weight: 700;
         border-radius: 10px;
         padding: 5px 15px;
-        background-color: #cacaca;
+        background-color: #dfdfdf;
     }
 
 </style>

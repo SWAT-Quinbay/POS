@@ -1,7 +1,10 @@
- import axios from 'vuex'
+ import axios from 'vuex';
+import { baseUserUrl } from "@/utils/urls"
+
+
  export const validateUser = ( {userData , success, error}) => {
     axios
-      .post(`http://192.168.0.140:8082/login?name=admin&password=admin`, userData)
+      .post(`${baseUserUrl}/login?name=admin&password=admin`, userData)
       .then((response) => {
         console.log("login API service succes..!")
         success && success(response);

@@ -4,7 +4,7 @@
               :show-layout="false"
               :enable-download="true"
               :paginate-elements-by-height="3000"
-              :filename="orderData.id + ' - ' + orderData.date"
+              filename="orderBill"
               :pdf-quality="2"
               :manual-pagination="false"
               pdf-format="a6"

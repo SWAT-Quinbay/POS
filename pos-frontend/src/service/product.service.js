@@ -1,9 +1,9 @@
 import axios from "axios";
-import { baseUrl } from "@/utils/urls"
+import { baseInventoryUrl } from "@/utils/urls"
 
 export const addNewProduct = ({ productData , successCallback ,  errrorCallback}) => {
   axios
-    .post(`${baseUrl}/add` , productData)
+    .post(`${baseInventoryUrl}/add` , productData)
     .then((response) => {
       successCallback && successCallback(response);
     })
@@ -14,7 +14,7 @@ export const addNewProduct = ({ productData , successCallback ,  errrorCallback}
 
 export const updateProductDetail = ({ productData , successCallback ,  errrorCallback}) => {
     axios
-      .put(`${baseUrl}`,productData)
+      .put(`${baseInventoryUrl}`,productData)
       .then((response) => {
         successCallback && successCallback(response);
       })
@@ -25,7 +25,7 @@ export const updateProductDetail = ({ productData , successCallback ,  errrorCal
 
   export const deleteProductData = ({ productId , successCallback ,  errrorCallback}) => {
     axios
-      .delete(`${baseUrl}/${productId}`)
+      .delete(`${baseInventoryUrl}/${productId}`)
       .then((response) => {
         successCallback && successCallback(response);
       })
@@ -36,7 +36,7 @@ export const updateProductDetail = ({ productData , successCallback ,  errrorCal
 
   export const getProductByName = ({ searchKey, successCallback, errorCallback }) => {
     axios
-      .get(`${baseUrl}/search?name=${searchKey}&page=0&size=20`)
+      .get(`${baseInventoryUrl}/search?name=${searchKey}&page=0&size=20`)
       .then((response) => {
         successCallback && successCallback(response);
       })
@@ -47,7 +47,7 @@ export const updateProductDetail = ({ productData , successCallback ,  errrorCal
 
 export const getInventory = ({ successCallback, errrorCallback }) => {
   axios
-    .get(`${baseUrl}/all?page=0&size=100`)
+    .get(`${baseInventoryUrl}/all?page=0&size=100`)
     .then((response) => {
       successCallback && successCallback(response);
     })

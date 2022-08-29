@@ -1,79 +1,136 @@
 <template>
-  <div class="login">
-  <form style="margin-top:0px;margin-bottom:10px;">
-   <center> 
-    <h4 style="color:white; padding-top:5px; font-style:bold; margin-bottom:25px; background:#FF6665">LOGIN</h4></center>
-    <label for="name"><font-awesome-icon icon="fa-solid fa-user"/> Enter Name:</label><br>
-      <input v-model="userdata.user" type="text" placeholder="Username" required><br><br>
-      <label for="Password"><font-awesome-icon icon="fa-solid fa-key"/> Enter Password:</label><br>
-      <input v-model="userdata.password" type="password" placeholder="Password" required><br><br>
-       <br /><center><span v-if="UnAuthorized" style="color:red">Wrong Credentials! Acces Denied.</span></center><br><center>
-      <button @click="sendUserStore()" style="border:1px solid white; border-radius:7px; color:white; background-color:#FF6665; padding:5px; margin-top:-25px" type="button">SIGN IN</button><br />
-      </center>
-  </form>
+  <div class="container login--body">
+    <div class="row justify-content-center">
+      <div class="col-11 col-md-4">
+        <div class="login">
+          <center>
+            <h4 class="login--header">LOGIN</h4>
+          </center>
+          <div class="action--form--controller">
+            <label for="user-name" class="action--input--label"
+              >Enter Username:</label
+            >
+            <input
+              type="text"
+              v-model="userdata.user"
+              class="action--input"
+              placeholder="Enter Your Username"
+            />
+          </div>
+          <div class="action--form--controller">
+            <label for="user-password" class="action--input--label"
+              >Enter Password:</label
+            >
+            <input
+              type="password"
+              v-model="userdata.password"
+              class="action--input"
+              placeholder="Enter Your Password"
+            />
+          </div>
+          <span v-if="UnAuthorized" style="color: red; text-align: center"
+            >Wrong Credentials! Acces Denied.</span
+          ><div class="login--button">
+          <div class="row justify-content-center">
+            <div class="col-7">
+              
+            <ButtonComponent
+            label="Login"
+            buttonStyle="btn--primary"
+            @onClick="sendUserStore()"
+            type="button"
+          />
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import Vue from "vue"
+import Vue from "vue";
+import ButtonComponent from "@/components/ButtonComponent.vue";
 export default {
-  data()
-  {
-    return{
-      userdata:{
-         user:"",
-         password:""
+  data() {
+    return {
+      userdata: {
+        user: "",
+        password: "",
       },
-      UnAuthorized:false
-    }
+      UnAuthorized: false,
+    };
   },
-  methods:
-  {
-    sendUserStore()
-    {
+  components: {
+    ButtonComponent,
+  },
+  methods: {
+    sendUserStore() {
       console.log("SUBMITTED");
-      if(this.userdata.user=="admin"&&this.userdata.password=="admin")
-      {
+      if (this.userdata.user == "admin" && this.userdata.password == "admin") {
         localStorage.setItem("isAuthenticated", true);
-        this.$store.dispatch('VALIDATE_USER',true)
-      //  localStorage.token = true;
-       this.$router.push(`/`);
-    }
-    else{
-        Vue.$toast.error("Invalid Cret!")
-       this.UnAuthorized=true;
-    }
-  }
-
-
-}}
+        this.$store.dispatch("VALIDATE_USER", true);
+        this.$router.push(`/`);
+      } else {
+        Vue.$toast.error("Invalid Cret!");
+        this.UnAuthorized = true;
+      }
+    },
+  },
+};
 </script>
 
 <style scoped>
-.login{
-    margin-left: 200px;
-    margin-top: 20vh;
-    background-color: white;
-     color:black;
-     width:60%;
-     margin-left:20vw;
-     border-radius:7px;
-     border:0.5px solid #FF6665;
-     box-shadow:rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
-}
-input{
-    border-radius: 5px;
-    width:250px;
-    background:#F2F1EF;
-    border:1px solid #FF6665;
+.action--input--label {
+  font-size: 14px;
+  font-weight: 700;
 }
 
-label{
-    font-size:15px;
-    font-style: bold;
-}
-input,label{
-  margin-left:30%;
+.action--input {
+  width: 100%;
+  height: 40px;
+  background-color: #f1f1f1;
+  border-radius: 10px;
+  border: 1px solid #f1f1f1;
+  margin-top: 5px;
+  padding-left: 10px;
+  outline: none;
 }
 
+.action--input:focus {
+  border: 1px solid #ff6665;
+}
+
+.action--form--controller {
+  margin-bottom: 20px;
+}
+
+.login {
+  margin-top: 20vh;
+  margin-bottom: 20vh;
+  background-color: white;
+  color: black;
+  border-radius: 7px;
+  padding: 20px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px,
+    rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+}
+
+.login--body {
+  height: 100vh;
+}
+
+.login--header {
+  color: #ff6665;
+  padding-top: 5px;
+  font-style: bold;
+  margin-bottom: 25px;
+  font-weight: bold;
+}
+
+.login--button{
+  margin-top : 40px;
+  margin-bottom : 25px;
+}
 </style>
