@@ -1,9 +1,6 @@
 package com.example.inventoryManagementService;
 
-import com.example.inventoryManagementService.customExceptions.InvalidDataProvidedException;
-import com.example.inventoryManagementService.customExceptions.NotEnoughQuanityException;
-import com.example.inventoryManagementService.customExceptions.PostgresException;
-import com.example.inventoryManagementService.customExceptions.ProductNotFoundException;
+import com.example.inventoryManagementService.customExceptions.*;
 import com.example.inventoryManagementService.models.Product;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -15,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,12 +30,12 @@ public class InventoryServiceImp implements InventoryService {
     Logger logger;
 
     @Override
-    public Product getById(int productId) throws PostgresException {
+    public Product getById(int productId) throws ProductNotFoundException {
 
         Optional<Product> employee = inventoryRepository.findById(productId);
 
         if (!employee.isPresent()) {
-            throw new PostgresException("Invalid Employee Id");
+            throw new ProductNotFoundException("Product Not Found");
         }
 
         return employee.get();
@@ -72,19 +70,24 @@ public class InventoryServiceImp implements InventoryService {
     }
 
     @Override
-    public Iterable<Product> incrementQuantityViaKafka(String message)
-            throws JsonProcessingException {
+    public List<Product> incrementQuantityViaKafka(String message)
+            throws JsonProcessingException, ProductNotFoundException, InvalidDataProvidedException {
 
         TypeReference<List<Product>> ref = new TypeReference<List<Product>>() {
         };
 
-        Iterable<Product> orderedProducts = postProduct(objectMapper.readValue(message, ref));
+        List<Product> orderedProducts = objectMapper.readValue(message, ref);
         incrementQuantity(orderedProducts);
+
         return orderedProducts;
     }
 
     @Override
-    public boolean checkStocks(Product orderedProduct) throws ProductNotFoundException, NotEnoughQuanityException {
+    public boolean checkStocks(Product orderedProduct) throws ProductNotFoundException, NotEnoughQuanityException, InvalidDataProvidedException {
+
+
+        checkValidQuantityProvided(orderedProduct);
+
         Optional<Product> result = inventoryRepository.findById(orderedProduct.getId());
 
         if (!result.isPresent()) {
@@ -101,7 +104,8 @@ public class InventoryServiceImp implements InventoryService {
     }
 
     @Override
-    public boolean checkStocks(List<Product> products) throws ProductNotFoundException, NotEnoughQuanityException {
+    public boolean checkStocks(List<Product> products) throws ProductNotFoundException, NotEnoughQuanityException, InvalidDataProvidedException {
+
         for(Product product :products){
             checkStocks(product);
         }
@@ -109,41 +113,51 @@ public class InventoryServiceImp implements InventoryService {
     }
 
     @Override
-    public boolean incrementQuantity(Product product){
+    public boolean incrementQuantity(Product product) throws ProductNotFoundException, InvalidDataProvidedException {
+
+        checkValidQuantityProvided(product);
         updateQuantity(product,true);
         return true;
     }
 
     @Override
-    public boolean incrementQuantity(Iterable<Product> products){
+    public boolean incrementQuantity(List<Product> products) throws ProductNotFoundException, InvalidDataProvidedException {
+
+        checkValidQuantityProvided(products);
+
         for(Product product:products){
-            updateQuantity(product, true);
+            updateQuantity(product,true);
         }
+
         return true;
     }
 
     @Override
-    public boolean reduceQuantity(Product product) throws ProductNotFoundException, NotEnoughQuanityException {
+    public boolean reduceQuantity(Product product) throws ProductNotFoundException, NotEnoughQuanityException, InvalidDataProvidedException {
+
+        checkValidQuantityProvided(product);
         checkStocks(product);
+
         updateQuantity(product,false);
+
         return true;
     }
 
     @Override
-    public boolean reduceQuantity(List<Product> products) throws ProductNotFoundException, NotEnoughQuanityException {
+    public boolean reduceQuantity(List<Product> products) throws ProductNotFoundException, NotEnoughQuanityException, InvalidDataProvidedException {
         checkStocks(products);
 
         for(Product product:products){
-            updateQuantity(product, false);
+            updateQuantity(product,false);
         }
+
         return true;
     }
 
-    private void updateQuantity(Product orderedProduct, boolean isIncrement) {
+    private void updateQuantity(Product orderedProduct, boolean isIncrement) throws ProductNotFoundException, InvalidDataProvidedException {
 
-        Optional<Product> result = inventoryRepository.findById(orderedProduct.getId());
-
-        Product originalProduct = result.get();
+        checkValidQuantityProvided(orderedProduct);
+        Product originalProduct = getById(orderedProduct.getId());
 
         int updatedQuantity;
         if(isIncrement){
@@ -158,21 +172,37 @@ public class InventoryServiceImp implements InventoryService {
     }
 
 
+    private boolean checkValidQuantityProvided(Product product) throws InvalidDataProvidedException {
+
+        if(product.getQuantity() < 0){
+            throw new InvalidDataProvidedException("Quantity Should be Positive number");
+        }
+        return true;
+    }
+
+    private boolean checkValidQuantityProvided(List<Product> products) throws InvalidDataProvidedException {
+
+        for(Product product : products){
+            checkValidQuantityProvided(product);
+        }
+
+        return true;
+    }
 
     @Override
-    public Product putProduct(Product product) throws PostgresException, InvalidDataProvidedException {
+    public Product putProduct(Product product) throws ProductNotFoundException, InvalidDataProvidedException {
+
+
 
 
         Product modifiedProduct = getById(product.getId());
+
+        checkValidQuantityProvided(product);
 
         modifiedProduct.setId(product.getId());
         modifiedProduct.setName(product.getName());
         modifiedProduct.setPrice(product.getPrice());
         modifiedProduct.setImageUrl(product.getImageUrl());
-
-        if(product.getQuantity() < 0){
-            throw new InvalidDataProvidedException("Quantity Shoud be Postive number");
-        }
         modifiedProduct.setQuantity(product.getQuantity());
 
 
@@ -180,7 +210,7 @@ public class InventoryServiceImp implements InventoryService {
     }
 
     @Override
-    public Product deleteEmployee(int productId) throws PostgresException {
+    public Product deleteProduct(int productId) throws ProductNotFoundException {
         Product result = getById(productId);
         inventoryRepository.deleteById(productId);
 

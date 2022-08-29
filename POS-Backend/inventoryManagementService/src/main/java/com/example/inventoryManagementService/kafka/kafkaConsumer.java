@@ -19,7 +19,7 @@ public class kafkaConsumer {
     private Logger logger;
 
 
-    @KafkaListener(topics="updateInventory", groupId = "group1")
+    @KafkaListener(topics="updateInventory", groupId = "group-1")
     public void consume(String message){
         try {
             logger.info("Data Consumed BY dataBase "+ message);
