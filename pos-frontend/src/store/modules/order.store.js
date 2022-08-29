@@ -1,4 +1,4 @@
-import { getOrderHistory } from "@/service/order.service"
+import { getOrderHistory  } from "@/service/order.service"
 
 export default {
     state : {
@@ -19,12 +19,12 @@ export default {
             getOrderHistory({
                 successCallback : ({data}) => {
                     console.log(data)
-                    commit("updateOrderHistory",data)
+                    commit("updateOrderHistory",data.content)
                 },
                 errrorCallback : (errorResponse) => {
                     console.log(errorResponse)
                 }
             })
-        },
+        }
     }
 }

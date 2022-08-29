@@ -1,56 +1,127 @@
 <template>
-    <div class="orderhistory--list my-1">
-    <div class="row mx-0 align-items-center justify-content-between">
-      <div class="col">
-        <p class="orderhistory--table--tr">{{ product.name }}</p>
-      </div>
-      <div class="col">
-        <BadgeComponent :label="stockAnalysis ? 'Out of Stock' : 'Available'" />
-      </div>
-      <div class="col">
-        <p class="orderhistory--table--tr">{{ product.price }}</p>
-      </div>
-      <div class="col">
-        <p class="orderhistory--table--tr">{{ product.quantity }}</p>
-      </div>
-      <div class="col">
+  <tr>
+    <th scope="row">
+      <p class="orderhistory--table--tr">{{ order.id }}</p>
+    </th>
+    <td>
+      <p class="orderhistory--table--tr">{{ getTimeFormat }}</p>
+    </td>
+    <td>
+      <BadgeComponent :label="orderStatus ? 'canceled' : 'created'" />
+    </td>
+    <td>
+      <p class="orderhistory--table--tr">₹{{ calculatedaxByTax }}</p>
+    </td>
+     <td>
+      <p class="orderhistory--table--tr">
+        <ul>
+          <li v-for="(data,index) in order.orderItems" :key="index">{{ data.name}}</li>
+        </ul>
+      </p>
+    </td>
+    <!-- <td>
+      <ButtonComponent
+        label="View Invoice"
+        buttonStyle="btn--secondary"
+        data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
+        type="button"
+      />
+    </td> -->
+    <td>
         <ButtonComponent
-          label="Edit"
-          buttonStyle="btn--secondary"
-          @onClick="editProduct(product)"
-          type="button"
-          data-bs-toggle="modal"
-          data-bs-target="#ActionModal"
-        />
-      </div>
-      <div class="col">
-        <ButtonComponent
-          label="Delete"
-          buttonStyle="btn--danger"
-          @onClick="() => {}"
+          label="Cancel Order"
+          :buttonStyle="[ orderStatus  ? 'btn--disabled' : 'btn--danger']"
+          :disabled="orderStatus ? true : false"
+          @onClick="cancelOrderFromOrders(order.id)"
           type="button"
         />
-      </div>
-    </div>
-    <hr class="orderhistory--single--list my-1" />
-    <OrderHistoryActionModal modalAccessIdName="ActionModal" v-show="showActionModal" :modalData="modalData" />
-  </div>
+    </td>
+  </tr>
 </template>
 <script>
-import OrderHistoryActionModal from "@/components/OrderHistoryActionModal.vue"
+import ButtonComponent from "@/components/ButtonComponent.vue";
+import BadgeComponent from "@/components/BadgeComponent.vue";
+import Vue from "vue";
+import { cancelOrder } from "@/service/order.service.js";
+
+
+
 export default {
-    name : "OrderHistroyList",
-    props : {
-        orderHistory : {
-            type : Object,
-            default : () => {}
-        }
+  name: "OrderHistroyList",
+  props: {
+    order: {
+      type: Object,
+      default: () => {},
     },
-    components : {
-      OrderHistoryActionModal
-    }
-}
+  },
+  computed: {
+    orderStatus() {
+      return this.order.status === "canceled";
+    },
+    calculatedaxByTax() {
+      return Math.floor(
+        this.order.subTotal + (this.order.subTotal / 100) * this.order.tax
+      );
+    },
+    getTimeFormat() {
+      return new Date(this.order.createdTime).toDateString();
+    },
+  },
+  components: {
+    ButtonComponent,
+    BadgeComponent,
+  },
+  methods: {
+    cancelOrderFromOrders(orderId) {
+      cancelOrder({
+        orderId,
+        successCallback: (res) => {
+          console.log(res);
+          if (res.status === 200) {
+            Vue.$toast.success("Order Cancelled Successfully!");
+            this.$store.dispatch("GET_ORDER_HISTORY");
+          } else {
+            Vue.$toast.error();
+            ("Cancellation Process declined!");
+          }
+        },
+        errrorCallback: (err) => {
+          Vue.$toast.error(err);
+        },
+      });
+    },
+    downloadBill() {
+      // alert("in billing modals")
+      const dataToBilling = {
+        cartProducts: this.cartProducts,
+        totalItems: this.cartProducts.length,
+        totalPrice: this.totalPrice,
+        tax: this.tax,
+        netPrice: this.getNetPrice,
+        taxAmount: this.calculateTax,
+        time: this.getTime,
+        date: this.getData,
+      };
+
+      console.log(dataToBilling);
+
+      this.$refs.billPage.generateBill(dataToBilling);
+
+      // this.billTemData = dataToBilling;
+      // this.billingTemplate = true;
+      // alert(this.getNetPrice)
+    },
+  },
+};
 </script>
 <style scoped>
-    
+.orderhistory--single--list {
+  margin: 0;
+  border: 0.5px solid #999999;
+}
+
+.orderhistory--table--tr {
+  margin: 5px;
+  font-size: 15px;
+}
 </style>

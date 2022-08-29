@@ -6,7 +6,9 @@
             <ProductListArea/>
         </div>
         <div class="col-12 col-md-6 col-lg-5 col-xl-3 order-0 order-md-1 mt-2">
-            <BillingArea/>
+            <div class="fixed--col">
+              <BillingArea/>
+            </div>
         </div>
       </div>
     </div>
@@ -26,4 +28,8 @@ export default {
 };
 </script>
 <style scoped>
+.fixed--col{
+  position: sticky;
+  top: 5%;
+}
 </style>

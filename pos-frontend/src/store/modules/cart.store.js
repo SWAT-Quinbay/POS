@@ -1,3 +1,5 @@
+import Vue from "vue";
+
 export default {
     state : {
         cartProductList : [],
@@ -8,7 +10,7 @@ export default {
             return state.cartProductList;
         },
         getTotalPrice(state){
-            return Math.floor(state.cartProductList.reduce((accum,item) => accum + (item.price * item.count), 0))
+            return Math.floor(state.cartProductList.reduce((accum,item) => accum + (item.price * item.quantity), 0))
         },
         getTax(state){
           return state.tax;
@@ -18,23 +20,31 @@ export default {
         addProductToCart(state, { product }) {
           console.log(product)
             const constructedProduct = {
-              count: 0,
+              quantity: 1,
+              inventoryQuantity : product.quantity,
               id: product.id,
-              imageurl: product.imageurl,
+              imageUrl: product.imageUrl,
               description : product.description,
               name: product.name,
               price : product.price
             };
             let item = state.cartProductList.find((item) => item.id == product.id);
             if (item){
-              item.count++;
+              if(item.quantity < item.inventoryQuantity){
+                item.quantity++;
+              }else{
+                Vue.$toast.error("Out of Stock, Please go for other!");
+              }
+              
             }
-            else state.cartProductList.push({ ...constructedProduct, count: 1 });
+            else{
+              state.cartProductList.push({ ...constructedProduct });
+            }
           },
       
           decreaseProductQuantity(state, { productId }) {
             let item = state.cartProductList.find((item) => item.id == productId);
-            if (item.count > 1) item.count--;
+            if (item.quantity > 1) item.quantity--;
           },
       
           removeProductFromCart(state, { productIndex }) {

@@ -1,20 +1,31 @@
 import axios from "axios";
-import { baseUrl , orderBaseUrl } from "@/utils/urls"
+import {  orderBaseUrl } from "@/utils/urls"
 
-export const createNewOrder = ({ orderData , success ,  error}) => {
+export const createNewOrder = ({ orderData , successCallback ,  errrorCallback}) => {
   axios
-    .post(`${baseUrl}`, orderData)
+    .post(`${orderBaseUrl}/add`, orderData)
     .then((response) => {
-      success && success(response);
+      successCallback && successCallback(response);
     })
     .catch((e) => {
-      error && error(e);
+      errrorCallback && errrorCallback(e);
+    });
+}
+
+export const cancelOrder = ({ orderId , successCallback ,  errrorCallback}) => {
+  axios
+    .get(`${orderBaseUrl}/cancel/${orderId}`)
+    .then((response) => {
+      successCallback && successCallback(response);
+    })
+    .catch((e) => {
+      errrorCallback && errrorCallback(e);
     });
 }
 
 export const deleteOrderHistory = ({ orderId , success ,  error}) => {
     axios
-      .delete(`${baseUrl}/${orderId}`)
+      .delete(`${orderBaseUrl}/${orderId}`)
       .then((response) => {
         success && success(response);
       })
@@ -25,7 +36,7 @@ export const deleteOrderHistory = ({ orderId , success ,  error}) => {
 
 export const getOrderHistory = ({ successCallback, errrorCallback }) => {
   axios
-    .get(`${orderBaseUrl}/all`)
+    .get(`${orderBaseUrl}/all?page=0&size=10`)
     .then((response) => {
       successCallback && successCallback(response);
     })
