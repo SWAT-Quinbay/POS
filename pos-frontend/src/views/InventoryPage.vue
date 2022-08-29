@@ -24,13 +24,13 @@
  </div>
 </template>
 <script>
-import products from '../utils/demoProducts'
+import demoProducts from '../utils/demoProducts'
 import ModalComponent from './ModalComponent.vue'
 export default {
      name : "InventoryPage",
      data(){
         return{
-            product:products,
+            product:demoProducts,
              showModal:false
         }
      },

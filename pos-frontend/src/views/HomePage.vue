@@ -23,6 +23,12 @@ export default {
     ProductListArea,
     BillingArea
   },
+  created(){
+      if(localStorage.token==undefined)
+      { 
+        this.$router.push(`/login`);  
+      }
+  }
 };
 </script>
 <style scoped>

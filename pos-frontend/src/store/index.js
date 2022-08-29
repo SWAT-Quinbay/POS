@@ -3,14 +3,15 @@ import Vuex from "vuex";
 
 import inventory from "@/store/modules/inventory.store"
 import cart from "@/store/modules/cart.store"
-
+import login from "@/store/modules/user.store"
 Vue.use(Vuex);
 
 
 export default new Vuex.Store({
     modules : {
       cart,
-      inventory
+      inventory,
+      login
     }
   });
   
