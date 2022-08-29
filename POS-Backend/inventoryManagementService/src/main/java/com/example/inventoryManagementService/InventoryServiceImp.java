@@ -50,7 +50,7 @@ public class InventoryServiceImp implements InventoryService {
     @Override
     public List<Product> searchByName(String query) {
 
-        return inventoryRepository.findAllByNameContainingIgnoreCase(query,Sort.by(Sort.Direction.ASC,"name"));
+        return inventoryRepository.findAllByNameContainingIgnoreCase(query,Sort.by(Sort.Direction.ASC,"name").and(Sort.by(Sort.Direction.DESC,"quantity")));
     }
 
     @Override

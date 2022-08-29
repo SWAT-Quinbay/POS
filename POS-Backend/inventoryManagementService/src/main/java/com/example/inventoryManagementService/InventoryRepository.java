@@ -9,4 +9,6 @@ import java.util.List;
 public interface InventoryRepository extends PagingAndSortingRepository<Product, Integer> {
     List<Product> findAllByName(String name);
     List<Product> findAllByNameContainingIgnoreCase(String query,Sort sort);
+
+//    OrderByProgDateAscStartTimeAsc
 }
