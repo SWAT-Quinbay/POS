@@ -14,7 +14,7 @@ export const addNewProduct = ({ productData , successCallback ,  errrorCallback}
 
 export const updateProductDetail = ({ productData , successCallback ,  errrorCallback}) => {
     axios
-      .put(`${baseInventoryUrl}`,productData)
+      .put(`${baseInventoryUrl}/update`,productData)
       .then((response) => {
         successCallback && successCallback(response);
       })
@@ -25,7 +25,7 @@ export const updateProductDetail = ({ productData , successCallback ,  errrorCal
 
   export const deleteProductData = ({ productId , successCallback ,  errrorCallback}) => {
     axios
-      .delete(`${baseInventoryUrl}/${productId}`)
+      .delete(`${baseInventoryUrl}/delete/${productId}`)
       .then((response) => {
         successCallback && successCallback(response);
       })
